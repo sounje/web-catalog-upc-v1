@@ -1,0 +1,497 @@
+/* Variables CSS para colores UPC */
+:root {
+    --upc-red: #dc3545;
+    --upc-dark-red: #c82333;
+    --upc-light-gray: #f8f9fa;
+    --upc-dark-gray: #343a40;
+}
+
+/* Configuración base */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+}
+
+/* Top Bar Styles */
+.top-bar {
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
+.language-selector a {
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.language-selector a.text-danger {
+    color: var(--upc-red) !important;
+}
+
+.contact-info {
+    font-size: 0.85rem;
+}
+
+/* Navigation Styles */
+.navbar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.navbar-brand img {
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--upc-red) !important;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+}
+
+.dropdown-menu-lg {
+    min-width: 500px;
+}
+
+.dropdown-header {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--upc-red);
+    margin-bottom: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 0.25rem;
+    margin: 0.125rem 0;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--upc-light-gray);
+    color: var(--upc-red);
+    transform: translateX(5px);
+}
+
+.dropdown-item.fw-bold {
+    border-top: 1px solid #dee2e6;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+/* Body styles */
+.body-title {
+    height: 100px;
+    background-color: var(--upc-dark-red);
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: var(--upc-light-gray);
+}
+/* Footer Styles */
+.footer {
+    background: linear-gradient(135deg, #eef1f5 0%, #f5f7f8 100%);
+}
+
+.footer-logo .filter-white {
+    filter: brightness(0) invert(1);
+}
+
+.footer h6 {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.footer-links {
+    font-size: 0.9rem;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #adb5bd;
+    transition: all 0.3s ease;
+    display: block;
+    padding: 0.25rem 0;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    padding-left: 0.5rem;
+    transform: translateX(5px);
+}
+
+.parrafo2-tamano{
+    font-size: 15px;
+    color: #4d5053;
+    margin-bottom: 0.5rem;
+}
+
+.a-direccion{
+    color: #adb5bd;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+/* Quick Links Styles */
+.quick-links {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+}
+
+.quick-links .btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.quick-links .btn:hover {
+    background-color: var(--upc-red);
+    border-color: var(--upc-red);
+    transform: translateY(-2px);
+}
+
+/* Social Links */
+.social-links .btn {
+    margin: 0.25rem;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.social-links .btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Footer Policies */
+.footer-policies a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-policies a:hover {
+    color: var(--upc-red) !important;
+}
+
+/* Custom Button Styles */
+.btn-danger {
+    background-color: var(--upc-red);
+    border-color: var(--upc-red);
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: var(--upc-dark-red);
+    border-color: var(--upc-dark-red);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Responsive Improvements */
+@media (max-width: 991.98px) {
+    .top-bar .row {
+        text-align: center;
+    }
+    
+    .top-bar .col-md-6:last-child {
+        margin-top: 0.5rem;
+    }
+    
+    .navbar-nav {
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .dropdown-menu-lg {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .footer .row {
+        text-align: center;
+    }
+    
+    .footer .col-lg-2,
+    .footer .col-md-6 {
+        margin-bottom: 2rem;
+    }
+    
+    .social-links .btn {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .navbar-brand img {
+        height: 40px;
+    }
+    
+    .dropdown-item {
+        font-size: 0.85rem;
+    }
+    
+    .footer {
+        padding-top: 3rem !important;
+    }
+    
+    .footer h6 {
+        font-size: 1rem;
+    }
+    
+    .quick-links .btn {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Animation and Transitions */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Focus states for accessibility */
+.nav-link:focus,
+.dropdown-item:focus,
+.btn:focus {
+    outline: 2px solid var(--upc-red);
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .dropdown-menu {
+        border: 2px solid #000;
+    }
+    
+    .footer {
+        background: #000 !important;
+    }
+    
+    .footer-links a {
+        color: #fff !important;
+    }
+}
+
+/* Dark mode preferences */
+@media (prefers-color-scheme: dark) {
+    .navbar {
+        background-color: #1a1a1a !important;
+    }
+    
+    .navbar-nav .nav-link {
+        color: #fff !important;
+    }
+    
+    .dropdown-menu {
+        background-color: #2d2d2d;
+        color: #fff;
+    }
+    
+    .dropdown-item {
+        color: #fff;
+    }
+}
+
+/* Print styles */
+@media print {
+    .top-bar,
+    .navbar,
+    .footer {
+        display: none;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+}
+
+/* Utility classes */
+.text-upc-red {
+    color: var(--upc-red) !important;
+}
+
+.bg-upc-red {
+    background-color: var(--upc-red) !important;
+}
+
+.border-upc-red {
+    border-color: var(--upc-red) !important;
+}
+
+/* Custom spacing */
+.py-6 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+}
+
+.mt-6 {
+    margin-top: 4rem !important;
+}
+
+.mb-6 {
+    margin-bottom: 4rem !important;
+}
+
+/* Enhanced hover effects */
+.nav-item:hover .dropdown-menu {
+    display: block;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--upc-red);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--upc-dark-red);
+}
+
+/* Estilos para filas clickeables de la tabla */
+#coursesTable tbody tr {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#coursesTable tbody tr:hover {
+    background-color: #f8f9fa !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#coursesTable tbody tr.table-active {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+#coursesTable tbody tr.table-active:hover {
+    background-color: #c82333 !important;
+}
+
+/* Indicador visual para filas clickeables */
+#coursesTable tbody tr {
+    position: relative;
+}
+
+#coursesTable tbody tr::after {
+    content: "👆 Haz clic para ver detalles";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+#coursesTable tbody tr:hover::after {
+    opacity: 1;
+}
+
+/* Animación para el título del catálogo */
+.body-title h2 {
+    color: var(--upc-light-gray);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.body-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--upc-red), var(--upc-dark-red));
+    border-radius: 2px;
+}
+
+/* Estilos mejorados para los filtros */
+.shadow-sm {
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-sm:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Responsive para el modal en dispositivos móviles */
+@media (max-width: 768px) {
+    #coursesTable tbody tr::after {
+        display: none;
+    }
+    
+    .body-title h2 {
+        font-size: 1.5rem;
+    }
+}

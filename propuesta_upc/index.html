@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPC - Universidad Peruana de Ciencias Aplicadas</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="estilos/styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar bg-light py-2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="language-selector">
+                        <a href="#" class="text-decoration-none me-3 text-danger fw-medium">ESPAÑOL</a>
+                        <a href="https://www.upc.edu.pe/en/" class="text-decoration-none text-muted">ENGLISH</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="contact-info">
+                        <span class="me-3 small">Informes: 313-3333 - 610-5030</span>
+                        <a href="https://www.upc.edu.pe/admision/?utm_source=Organico&utm_medium=flotante-admision" 
+                           class="btn btn-danger btn-sm px-3">Inscríbete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="https://www.upc.edu.pe/">
+                <img src="	https://www.upc.edu.pe/static/img/logo_upc_red.png" 
+                     alt="UPC Logo" height="50">
+            </a>
+
+            <!-- Navbar Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Menu -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- PREGRADO Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-medium text-dark" href="#" role="button" 
+                           data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                            PREGRADO
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg p-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="dropdown-header text-danger">FACULTADES</h6>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-administracion-en-hoteleria-y-turismo/">
+                                        Administración en Hotelería y Turismo
+                                    </a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-arquitectura/">Arquitectura</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-artes-contemporaneas/">Artes Contemporáneas</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-ciencias-de-la-salud/">Ciencias de la Salud</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-ciencias-humanas/">Ciencias Humanas</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-comunicaciones/">Comunicaciones</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-derecho/">Derecho</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="dropdown-header text-danger">&nbsp;</h6>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-diseno/">Diseño</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-economia/">Economía</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-educacion/">Educación</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-ingenieria/">Ingeniería</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-negocios/">Negocios</a>
+                                    <a class="dropdown-item" href="https://pregrado.upc.edu.pe/facultad-de-psicologia/">Psicología</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fw-bold text-danger" href="https://pregrado.upc.edu.pe/?utm_source=Organico&utm_medium=banner">
+                                        Ver todas las carreras <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- EPE Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-medium text-dark" href="#" role="button" 
+                           data-bs-toggle="dropdown">
+                            EPE
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://epe.upc.edu.pe/carrera/">Carreras</a></li>
+                            <li><a class="dropdown-item" href="https://epe.upc.edu.pe/acerca-de-epe/">Acerca de EPE</a></li>
+                            <li><a class="dropdown-item" href="https://epe.upc.edu.pe/admision-epe/">Admisión EPE</a></li>
+                            <li><a class="dropdown-item" href="https://epe.upc.edu.pe/landings/epe/simulador-de-convalidaciones/">Convalidaciones</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item fw-bold text-danger" href="https://epe.upc.edu.pe/?utm_source=Organico&utm_medium=banner">
+                                Ver más <i class="bi bi-arrow-right"></i>
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- POSTGRADO Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-medium text-dark" href="#" role="button" 
+                           data-bs-toggle="dropdown">
+                            POSTGRADO
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://postgrado.upc.edu.pe/acerca-de-la-escuela/">Acerca de la Escuela</a></li>
+                            <li><a class="dropdown-item" href="https://postgrado.upc.edu.pe/landings/maestrias/">Maestrías</a></li>
+                            <li><a class="dropdown-item" href="https://postgrado.upc.edu.pe/landings/maestrias/mba/">MBA</a></li>
+                            <li><a class="dropdown-item" href="https://postgrado.upc.edu.pe/landings/programas-especializados/">Programas Especializados</a></li>
+                            <li><a class="dropdown-item" href="https://postgrado.upc.edu.pe/landings/cursos-de-especializacion/">Cursos de Especialización</a></li>
+                            <li><a class="dropdown-item" href="https://educacioncontinua.upc.edu.pe/">Educación Continua EPG</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item fw-bold text-danger" href="https://postgrado.upc.edu.pe/?utm_source=Organico&utm_medium=banner">
+                                Ver más <i class="bi bi-arrow-right"></i>
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- WORKING STUDENT -->
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium text-dark" href="https://workingstudent.upc.edu.pe/?utm_source=Organico&utm_medium=banner">
+                            WORKING STUDENT
+                        </a>
+                    </li>
+
+                    <!-- CAMPUS Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-medium text-dark" href="#" role="button" 
+                           data-bs-toggle="dropdown">
+                            CAMPUS
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/campus/campus-monterrico/">Monterrico</a></li>
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/campus/campus-san-isidro/">San Isidro</a></li>
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/campus/campus-san-miguel/">San Miguel</a></li>
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/campus/campus-villa/">Villa</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item fw-bold text-danger" href="https://www.upc.edu.pe/nosotros/campus/">
+                                Ver todos los campus <i class="bi bi-arrow-right"></i>
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- NOSOTROS Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-medium text-dark" href="#" role="button" 
+                           data-bs-toggle="dropdown">
+                            NOSOTROS
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/quienes-somos/mision-y-vision/">Quiénes Somos</a></li>
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/autoridades-upc/">Autoridades UPC</a></li>
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/nosotros/acreditaciones/acreditacion-institucional/">Acreditación institucional</a></li>
+                            <li><a class="dropdown-item" href="https://sica.upc.edu.pe/publico/reglamentos-upc">Políticas, Reglamentos y Normas</a></li>
+                            <li><a class="dropdown-item" href="https://www.upc.edu.pe/transparencia-upc/">Transparencia</a></li>
+                            <li><a class="dropdown-item" href="https://www.laureate.net/ethics-and-compliance/">Ética</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item fw-bold text-danger" href="https://www.upc.edu.pe/nosotros/">
+                                Ver más <i class="bi bi-arrow-right"></i>
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area (placeholder) -->
+    <main>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 body-title">
+                    <h2 style="margin-top: 2%;">CATÁLOGO DE CURSOS UPC</h2>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Filtros -->
+                <div class="col-lg-3 col-md-4 mb-4">
+                    <div class="p-3 rounded shadow-sm">
+                        <h5>Filtros de Cursos</h5>
+                        <hr>
+                        <div class="mb-3">
+                            <label class="form-label"><h5>Buscar Cursos</h5></label>
+                            <input type="text" class="form-control" placeholder="Ingresa el código o nombre del curso">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><h5>Nivel de Enseñanza</h5></label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                                <label class="form-check-label" for="checkDefault">
+                                    Pregrado Tradicional
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked="">
+                                <label class="form-check-label" for="checkChecked">
+                                    Pregrado EPE
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked="">
+                                <label class="form-check-label" for="checkChecked">
+                                    Postgrado (Maestrías)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><h5>Facultad</h5></label>
+                            <select class="form-select">
+                                <option value="">Select...</option>
+                                <option>Facultad de Ciencias de la Comunicación</option>
+                                <option>Facultad de Negocios</option>
+                                <option>Facultad de Ciencias de la Salud</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><h5>Programa</h5></label>
+                            <select class="form-select">
+                            <option selected>Administración</option>
+                            <option>Ciencias Políticas</option>
+                            <option>Antropología</option>
+                            <option>Medicina</option>
+                            <option>Comunicación</option>
+                            <option>Contabilidad</option>
+                            <option>Ingeniería de Software</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><h5>Tipo de Curso</h5></label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked="">
+                                <label class="form-check-label" for="checkChecked">
+                                    Obligatorio
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkChecked" checked="">
+                                <label class="form-check-label" for="checkChecked">
+                                    Electivo
+                                </label>
+                            </div>
+                        </div>
+                        <hr>
+                        <button class="btn btn-danger btn-sm mb-3 w-100" id="buscar">🔍 Buscar</button>
+                        <button class="btn btn-light btn-sm mb-3 w-100" id="limpiar">🧹 Limpiar Filtros</button>
+                    </div>
+                </div>
+                <!-- mostramos la imagen expandida en todo el div -->
+                <div id="before_search" class="col-lg-9 col-md-8" style="background-image: url('assets/img_3.png');background-repeat: no-repeat;background-size: cover;background-position: center;">
+                </div>
+                <!-- Tabla de resultados -->
+                <div id="results_search" class="col-lg-9 col-md-8">
+                    <div class="border p-3 rounded shadow-sm">
+                        <h4>Resultado de búsqueda</h4>
+                        <a href="#" class="small text-decoration-none">📥 Exportar todos los resultados como Excel</a>
+                        <div class="table-responsive mt-3">
+                            <table id="coursesTable" class="table table-bordered table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Cod Curso</th>
+                                        <th>Curso</th>
+                                        <th>Programa</th>
+                                        <th>Crédito</th>
+                                        <th>Facultad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>DER101</td><td>Derecho Constitucional Peruano</td><td>Derecho</td><td>4</td><td>Facultad de Derecho</td></tr>
+                                    <tr><td>ING203</td><td>Ingeniería de Software</td><td>Ingeniería de Sistemas</td><td>3</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>CON145</td><td>Contabilidad Financiera</td><td>Contabilidad</td><td>3</td><td>Facultad de Ciencias Contables</td></tr>
+                                    <tr><td>HIS089</td><td>Historia del Perú Republicano</td><td>Historia</td><td>2</td><td>Facultad de Letras y Ciencias Humanas</td></tr>
+                                    <tr><td>MAT001</td><td>Matemática Básica</td><td>Educación</td><td>4</td><td>Facultad de Educación</td></tr>
+                                    <tr><td>DER205</td><td>Derecho Penal I</td><td>Derecho</td><td>3</td><td>Facultad de Derecho</td></tr>
+                                    <tr><td>MKT312</td><td>Marketing Digital</td><td>Administración</td><td>3</td><td>Facultad de Ciencias Administrativas</td></tr>
+                                    <tr><td>ING401</td><td>Programación Orientada a Objetos</td><td>Ingeniería de Software</td><td>4</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>ARQ123</td><td>Diseño Arquitectónico</td><td>Arquitectura</td><td>5</td><td>Facultad de Arquitectura</td></tr>
+                                    <tr><td>PSI156</td><td>Psicología del Desarrollo</td><td>Psicología</td><td>3</td><td>Facultad de Psicología</td></tr>
+                                    <tr><td>ECO287</td><td>Macroeconomía</td><td>Economía</td><td>4</td><td>Facultad de Ciencias Económicas</td></tr>
+                                    <tr><td>FIL094</td><td>Filosofía Andina</td><td>Filosofía</td><td>3</td><td>Facultad de Filosofía</td></tr>
+                                    <tr><td>CON298</td><td>Legislación Tributaria Peruana</td><td>Contabilidad</td><td>3</td><td>Facultad de Ciencias Contables</td></tr>
+                                    <tr><td>ELE167</td><td>Fundamentos de Electricidad</td><td>Ingeniería Eléctrica</td><td>3</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>SOC234</td><td>Metodología de la Investigación</td><td>Sociología</td><td>2</td><td>Facultad de Ciencias Sociales</td></tr>
+                                    <tr><td>DIS345</td><td>Diseño Gráfico Digital</td><td>Diseño</td><td>4</td><td>Facultad de Arte y Diseño</td></tr>
+                                    <tr><td>EST189</td><td>Estadística Aplicada</td><td>Estadística</td><td>4</td><td>Facultad de Ciencias</td></tr>
+                                    <tr><td>LIN078</td><td>Lengua Quechua</td><td>Lingüística</td><td>2</td><td>Facultad de Letras y Ciencias Humanas</td></tr>
+                                    <tr><td>MED456</td><td>Bioética</td><td>Medicina</td><td>2</td><td>Facultad de Medicina Humana</td></tr>
+                                    <tr><td>FAR223</td><td>Farmacología General</td><td>Farmacia</td><td>3</td><td>Facultad de Farmacia y Bioquímica</td></tr>
+                                    <tr><td>AMB301</td><td>Ingeniería Ambiental</td><td>Ingeniería Ambiental</td><td>4</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>SIS412</td><td>Sistemas de Información</td><td>Ingeniería de Sistemas</td><td>3</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>LIT267</td><td>Literatura Peruana</td><td>Literatura</td><td>3</td><td>Facultad de Letras y Ciencias Humanas</td></tr>
+                                    <tr><td>ADM334</td><td>Administración de Recursos Humanos</td><td>Administración</td><td>3</td><td>Facultad de Ciencias Administrativas</td></tr>
+                                    <tr><td>DER389</td><td>Criminología</td><td>Derecho</td><td>3</td><td>Facultad de Derecho</td></tr>
+                                    <tr><td>COM178</td><td>Producción Audiovisual</td><td>Comunicación</td><td>4</td><td>Facultad de Ciencias de la Comunicación</td></tr>
+                                    <tr><td>GEO145</td><td>Geografía del Perú</td><td>Geografía</td><td>3</td><td>Facultad de Ciencias Sociales</td></tr>
+                                    <tr><td>IND256</td><td>Control de Calidad</td><td>Ingeniería Industrial</td><td>3</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>ENF123</td><td>Salud Pública</td><td>Enfermería</td><td>3</td><td>Facultad de Enfermería</td></tr>
+                                    <tr><td>ECO445</td><td>Evaluación de Proyectos</td><td>Economía</td><td>4</td><td>Facultad de Ciencias Económicas</td></tr>
+                                    <tr><td>ODO367</td><td>Práctica Clínica I</td><td>Odontología</td><td>5</td><td>Facultad de Odontología</td></tr>
+                                    <tr><td>POL289</td><td>Teoría del Estado</td><td>Ciencia Política</td><td>3</td><td>Facultad de Ciencias Sociales</td></tr>
+                                    <tr><td>BIO134</td><td>Microbiología</td><td>Biología</td><td>4</td><td>Facultad de Ciencias Biológicas</td></tr>
+                                    <tr><td>QUI456</td><td>Ingeniería de Procesos</td><td>Ingeniería Química</td><td>4</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>DER567</td><td>Derecho Internacional Público</td><td>Derecho</td><td>4</td><td>Facultad de Derecho</td></tr>
+                                    <tr><td>COM234</td><td>Comunicación Corporativa</td><td>Comunicación</td><td>3</td><td>Facultad de Ciencias de la Comunicación</td></tr>
+                                    <tr><td>ANT178</td><td>Antropología Cultural</td><td>Antropología</td><td>3</td><td>Facultad de Ciencias Sociales</td></tr>
+                                    <tr><td>ARQ456</td><td>Diseño de Interiores</td><td>Arquitectura</td><td>4</td><td>Facultad de Arquitectura</td></tr>
+                                    <tr><td>MED789</td><td>Patología General</td><td>Medicina</td><td>3</td><td>Facultad de Medicina Humana</td></tr>
+                                    <tr><td>SIS567</td><td>Ingeniería de Base de Datos</td><td>Ingeniería de Sistemas</td><td>4</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>SOC345</td><td>Estudios de Género</td><td>Sociología</td><td>2</td><td>Facultad de Ciencias Sociales</td></tr>
+                                    <tr><td>DER678</td><td>Derecho de la Empresa</td><td>Derecho</td><td>3</td><td>Facultad de Derecho</td></tr>
+                                    <tr><td>CIV234</td><td>Ingeniería Sanitaria</td><td>Ingeniería Civil</td><td>4</td><td>Facultad de Ingeniería</td></tr>
+                                    <tr><td>POL456</td><td>Administración Pública</td><td>Ciencia Política</td><td>3</td><td>Facultad de Ciencias Sociales</td></tr>
+                                    <tr><td>COM567</td><td>Producción Periodística</td><td>Comunicación</td><td>4</td><td>Facultad de Ciencias de la Comunicación</td></tr>
+                                    <tr><td>CON456</td><td>Contabilidad de Costos</td><td>Contabilidad</td><td>3</td><td>Facultad de Ciencias Contables</td></tr>
+                                    <tr><td>MKT567</td><td>Investigación de Mercados</td><td>Marketing</td><td>3</td><td>Facultad de Ciencias Administrativas</td></tr>
+                                    <tr><td>EDU234</td><td>Educación Intercultural Bilingüe</td><td>Educación</td><td>3</td><td>Facultad de Educación</td></tr>
+                                    <tr><td>SIS678</td><td>Redes de Computadoras</td><td>Ingeniería de Sistemas</td><td>3</td><td>Facultad de Ingeniería</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer text-light pt-5 pb-3">
+        <section class="bg-white pb-4">
+            <div class="container">
+                <div class="row">
+                <div class="col-md-3 mt-3 pb-2 pb-md-0 d-flex justify-content-center">
+                        <img src="https://upc-cdn.b-cdn.net/assets/images/institucional/logo-negro-wasc-desktop.svg" 
+                             alt="UPC Logo" height="40" class="filter-white" style="margin: auto;">
+                </div>
+                <div class="col-md-6 mt-3 px-lg-0">
+                    <p class="parrafo2-tamano">Prolongación Primavera 2390, Monterrico, Santiago de Surco
+                    <br>Informes: 313-3333 - 610-5030, 0800-00021 <small>(gratuito para fuera de Lima) </small> | Servicio al alumno 630-3333 | Fax: 313-3334
+                    <br>
+                    <a href="https://www.upc.edu.pe/servicios/contacto-para-alumnos-upc/" target="_blank" class="a-direccion">Contacto</a>
+                    |
+                    <a href="https://www.upc.edu.pe/html/politica-y-terminos/0/politica-privacidad.htm" target="_blank" class="a-direccion">Política
+                        de Privacidad</a> |
+                    <!-- <a href="https://www.upc.edu.pe/html/politica-y-terminos/0/terminos-condiciones.htm" target="_blank"
+                        class="a-dirección">Términos
+                        y Condiciones</a> | -->
+                        <a href="https://upc.edu.pe/proteccion-de-datos/" target="_blank" class="a-direccion">Política de Protección de Datos Personales y Derechos ARCO</a>
+                    </p>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <div class="d-flex justify-content-center">
+                    <a href="https://www.facebook.com/upcedu" target="_blank" class="cursor-pointer">
+                        <img src="https://www.upc.edu.pe/static/img/iconos/ic_facebook.svg" alt="Facebook de UPC">
+                    </a>
+                    <a href="https://www.youtube.com/user/UPCedupe" target="_blank" class="cursor-pointer ml-1">
+                        <img src="https://www.upc.edu.pe/static/img/iconos/ic_youtube.svg" alt="Youtube de UPC">
+                    </a>
+                    <a href="https://twitter.com/upcedu" target="_blank" class="cursor-pointer ml-1">
+                        <img src="https://www.upc.edu.pe/static/img/iconos/ic_twitter.svg" alt="Twitter de UPC">
+                    </a>
+                    </div>
+                    <figure class="d-flex justify-content-center mt-2">
+                    <a href="https://librodereclamaciones.upc.edu.pe/" target="_blank"> <img src="https://www.upc.edu.pe/static/img/libro-reclamaciones.png" alt="libro-reclamaciones"></a>
+                    </figure>
+                </div>
+                </div>
+            </div>
+        </section>
+        <div class="container">
+            <!-- Main footer content -->
+             <br>
+            <div class="row">
+                <!-- Academic Programs -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-danger mb-3">PREGRADO</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-administracion-en-hoteleria-y-turismo/" class="text-light-emphasis">Administración en Hotelería y Turismo</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-arquitectura/" class="text-light-emphasis">Arquitectura</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-artes-contemporaneas/" class="text-light-emphasis">Artes Contemporáneas</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-ciencias-de-la-salud/" class="text-light-emphasis">Ciencias de la Salud</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-ciencias-humanas/" class="text-light-emphasis">Ciencias Humanas</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-comunicaciones/" class="text-light-emphasis">Comunicaciones</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-derecho/" class="text-light-emphasis">Derecho</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-diseno/" class="text-light-emphasis">Diseño</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-economia/" class="text-light-emphasis">Economía</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-educacion/" class="text-light-emphasis">Educación</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-ingenieria/" class="text-light-emphasis">Ingeniería</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-negocios/" class="text-light-emphasis">Negocios</a></li>
+                        <li><a href="https://pregrado.upc.edu.pe/facultad-de-psicologia/" class="text-light-emphasis">Psicología</a></li>
+                    </ul>
+                </div>
+
+                <!-- EPE and Postgrado -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-danger mb-3">EPE</h6>
+                    <ul class="list-unstyled footer-links mb-4">
+                        <li><a href="https://epe.upc.edu.pe/carrera/" class="text-light-emphasis">Carreras</a></li>
+                        <li><a href="https://epe.upc.edu.pe/acerca-de-epe/" class="text-light-emphasis">Acerca de EPE</a></li>
+                        <li><a href="https://epe.upc.edu.pe/admision-epe/" class="text-light-emphasis">Admisión EPE</a></li>
+                        <li><a href="https://epe.upc.edu.pe/landings/epe/simulador-de-convalidaciones/" class="text-light-emphasis">Convalidaciones</a></li>
+                    </ul>
+                    
+                    <h6 class="text-danger mb-3">POSTGRADO</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="https://postgrado.upc.edu.pe/acerca-de-la-escuela/" class="text-light-emphasis">Acerca de la Escuela</a></li>
+                        <li><a href="https://postgrado.upc.edu.pe/landings/maestrias/" class="text-light-emphasis">Maestrías</a></li>
+                        <li><a href="https://postgrado.upc.edu.pe/landings/maestrias/mba/" class="text-light-emphasis">MBA</a></li>
+                        <li><a href="https://postgrado.upc.edu.pe/landings/programas-especializados/" class="text-light-emphasis">Programas Especializados</a></li>
+                        <li><a href="https://postgrado.upc.edu.pe/landings/cursos-de-especializacion/" class="text-light-emphasis">Cursos de Especialización</a></li>
+                        <li><a href="https://educacioncontinua.upc.edu.pe/" class="text-light-emphasis">Educación Continua EPG</a></li>
+                    </ul>
+                </div>
+
+                <!-- Campus and About Us -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-danger mb-3">CAMPUS</h6>
+                    <ul class="list-unstyled footer-links mb-4">
+                        <li><a href="https://www.upc.edu.pe/nosotros/campus/campus-monterrico/" class="text-light-emphasis">Monterrico</a></li>
+                        <li><a href="https://www.upc.edu.pe/nosotros/campus/campus-san-isidro/" class="text-light-emphasis">San Isidro</a></li>
+                        <li><a href="https://www.upc.edu.pe/nosotros/campus/campus-san-miguel/" class="text-light-emphasis">San Miguel</a></li>
+                        <li><a href="https://www.upc.edu.pe/nosotros/campus/campus-villa/" class="text-light-emphasis">Villa</a></li>
+                    </ul>
+                    
+                    <h6 class="text-danger mb-3">NOSOTROS</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="https://www.upc.edu.pe/nosotros/quienes-somos/mision-y-vision/" class="text-light-emphasis">Quiénes Somos</a></li>
+                        <li><a href="https://www.upc.edu.pe/nosotros/autoridades-upc/" class="text-light-emphasis">Autoridades UPC</a></li>
+                        <li><a href="https://www.upc.edu.pe/nosotros/acreditaciones/acreditacion-institucional/" class="text-light-emphasis">Acreditación institucional</a></li>
+                        <li><a href="https://sica.upc.edu.pe/publico/reglamentos-upc" class="text-light-emphasis">Políticas, Reglamentos y Normas</a></li>
+                        <li><a href="https://www.upc.edu.pe/transparencia-upc/" class="text-light-emphasis">Transparencia</a></li>
+                        <li><a href="https://www.laureate.net/ethics-and-compliance/" class="text-light-emphasis">Ética</a></li>
+                    </ul>
+                </div>
+
+                <!-- Additional Services -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-danger mb-3">BLOGS</h6>
+                    <ul class="list-unstyled footer-links mb-4">
+                        <li><a href="https://noticias.upc.edu.pe/" class="text-light-emphasis">Noticias UPC</a></li>
+                        <li><a href="https://internacional.upc.edu.pe/" class="text-light-emphasis">UPC Internacional</a></li>
+                        <li><a href="https://noticias.upc.edu.pe/alumni/" class="text-light-emphasis">UPC Alumni</a></li>
+                        <li><a href="https://editorial.upc.edu.pe/" class="text-light-emphasis">Editorial UPC</a></li>
+                    </ul>
+                    
+                    <h6 class="text-danger mb-3">TRABAJA CON NOSOTROS</h6>
+                    <ul class="list-unstyled footer-links mb-4">
+                        <li><a href="https://fa-evib-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/es/sites/CX_1/?mode=location" class="text-light-emphasis">Trabaja con nosotros</a></li>
+                    </ul>
+                    
+                    <h6 class="text-danger mb-3">CENTROS DE SERVICIOS</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="https://www.upc.edu.pe/centro-universitario-de-salud-upc/conocenos/" class="text-light-emphasis">Centro Universitario de Salud</a></li>
+                        <li><a href="https://upc.edu.pe/servicios/centro-medico-veterinario/" class="text-light-emphasis">Centro Médico Veterinario</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <h6 class="text-danger mb-3">¿Necesitas contactarte con nosotros?</h6>
+                    <div class="social-links mb-3">
+                        <a href="https://www.facebook.com/upcedu" class="btn btn-outline-light me-2" target="_blank">
+                            <i class="bi bi-facebook"></i> Facebook de UPC
+                        </a>
+                        <a href="https://www.youtube.com/user/UPCedupe" class="btn btn-outline-light me-2" target="_blank">
+                            <i class="bi bi-youtube"></i> Youtube de UPC
+                        </a>
+                        <a href="https://twitter.com/upcedu" class="btn btn-outline-light me-2" target="_blank">
+                            <i class="bi bi-twitter"></i> Twitter de UPC
+                        </a>
+                        <a href="https://librodereclamaciones.upc.edu.pe/" class="btn btn-outline-light" target="_blank">
+                            <i class="bi bi-book"></i> Libro de reclamaciones
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="row">
+                <div class="col-12">
+                    <hr class="border-secondary">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <p class="mb-0 small">Universidad Peruana de Ciencias Aplicadas S.A.C - R.U.C: 2021161454</p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="footer-policies">
+                                <a href="https://www.upc.edu.pe/servicios/contacto-para-alumnos-upc/" class="text-light-emphasis small me-2">Contacto</a>
+                                <a href="https://www.upc.edu.pe/html/politica-y-terminos/0/politica-privacidad.htm" class="text-light-emphasis small me-2">Política de Privacidad</a>
+                                <a href="https://upc.edu.pe/proteccion-de-datos/" class="text-light-emphasis small">Protección de Datos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Incluir el modal de detalle del curso -->
+    <div id="modal-container"></div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="js/main.js"></script>
+
+</body>
+</html>

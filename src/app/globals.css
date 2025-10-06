@@ -3,24 +3,32 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --upc-red: #dc3545;
+  --upc-dark-red: #c82333;
+  --upc-light-gray: #f8f9fa;
+  --upc-dark-gray: #343a40;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-roboto), system-ui, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+/* Estilos para smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Estilos para mejorar la accesibilidad */
+*:focus-visible {
+  outline: 2px solid var(--upc-red);
+  outline-offset: 2px;
 }
