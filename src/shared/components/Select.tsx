@@ -5,7 +5,7 @@
 
 import { useId } from 'react';
 import type { SelectHTMLAttributes } from 'react';
-import { cn } from '@/lib/utils/course.utils';
+import { cn } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
 
 interface SelectOption {

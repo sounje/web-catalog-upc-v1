@@ -8,23 +8,21 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Search, RotateCcw } from 'lucide-react';
+import { Search, RotateCcw, X } from 'lucide-react';
+import { useEffect } from 'react';
 import { useCourseContext } from '@/context/CourseContext';
-import type { CourseFilters } from '@/lib/types/course.types';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
-import { Checkbox } from '@/components/ui/Checkbox';
+import type { CourseFilters } from '@/features/courses/types';
+import { Button, Input, Select, Checkbox } from '@/shared/components';
 import {
   TEACHING_LEVEL_OPTIONS,
   COURSE_TYPE_OPTIONS,
   FACULTY_OPTIONS,
   PROGRAM_OPTIONS,
-} from '@/lib/constants/courses.constants';
-import { filterSchema, type FilterFormData } from '@/lib/validation/filter.schema';
+} from '@/features/courses/constants';
+import { filterSchema, type FilterFormData } from '@/features/courses/validation';
 
 export function CourseFilters(): React.JSX.Element {
-  const { filters, updateFilters, performSearch, clearSearch } = useCourseContext();
+  const { filters, updateFilters, performSearch, clearSearch, isLoading, error, clearError } = useCourseContext();
 
   const { register, handleSubmit, watch, reset, setValue } = useForm<FilterFormData>({
     resolver: zodResolver(filterSchema),
@@ -39,13 +37,23 @@ export function CourseFilters(): React.JSX.Element {
 
   const watchedTeachingLevels = watch('teachingLevels');
   const watchedCourseTypes = watch('courseTypes');
+  const watchedFaculty = watch('faculty');
+
+  /**
+   * Selecciona automáticamente el primer tipo de curso al cargar el componente
+   */
+  useEffect(() => {
+    if (watchedCourseTypes.length === 0) {
+      setValue('courseTypes', [COURSE_TYPE_OPTIONS[0].value]);
+    }
+  }, [setValue, watchedCourseTypes.length]);
 
   /**
    * Handler para submit del formulario
    */
-  const onSubmit = (data: FilterFormData): void => {
+  const onSubmit = async (data: FilterFormData): Promise<void> => {
     updateFilters(data as CourseFilters);
-    performSearch();
+    await performSearch();
   };
 
   /**
@@ -54,6 +62,7 @@ export function CourseFilters(): React.JSX.Element {
   const handleClearFilters = (): void => {
     reset();
     clearSearch();
+    clearError();
   };
 
   /**
@@ -66,12 +75,10 @@ export function CourseFilters(): React.JSX.Element {
   };
 
   /**
-   * Handler para cambios en checkboxes de tipos de curso
+   * Handler para cambios en radio buttons de tipos de curso
    */
-  const handleCourseTypeChange = (value: string, checked: boolean): void => {
-    const current = watchedCourseTypes;
-    const updated = checked ? [...current, value] : current.filter((v) => v !== value);
-    setValue('courseTypes', updated);
+  const handleCourseTypeChange = (value: string): void => {
+    setValue('courseTypes', [value]);
   };
 
   return (
@@ -123,22 +130,56 @@ export function CourseFilters(): React.JSX.Element {
           <h3 className="text-lg font-medium text-gray-900 mb-3">Tipo de Curso</h3>
           <div className="space-y-3">
             {COURSE_TYPE_OPTIONS.map((option) => (
-              <Checkbox
-                key={option.value}
-                label={option.label}
-                checked={watchedCourseTypes.includes(option.value)}
-                onChange={(e) => handleCourseTypeChange(option.value, e.target.checked)}
-              />
+              <div key={option.value} className="flex items-center">
+                <input
+                  type="radio"
+                  id={`course-type-${option.value}`}
+                  name="courseTypes"
+                  value={option.value}
+                  checked={watchedCourseTypes.includes(option.value)}
+                  onChange={() => handleCourseTypeChange(option.value)}
+                  className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500 focus:ring-2"
+                />
+                <label
+                  htmlFor={`course-type-${option.value}`}
+                  className="ml-3 text-sm font-medium text-gray-700 cursor-pointer select-none"
+                >
+                  {option.label}
+                </label>
+              </div>
             ))}
           </div>
         </div>
 
         <hr className="border-gray-200" />
 
+        {/* Mensaje de error */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-red-600">{error}</p>
+              <button
+                type="button"
+                onClick={clearError}
+                className="text-red-400 hover:text-red-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Botones de acción */}
         <div className="space-y-3">
-          <Button type="submit" variant="danger" size="sm" fullWidth icon={<Search className="h-4 w-4" />}>
-            Buscar
+          <Button 
+            type="submit" 
+            variant="danger" 
+            size="sm" 
+            fullWidth 
+            icon={<Search className="h-4 w-4" />}
+            disabled={!watchedFaculty || watchedFaculty === '' || isLoading}
+          >
+            {isLoading ? 'Buscando...' : 'Buscar'}
           </Button>
           <Button
             type="button"

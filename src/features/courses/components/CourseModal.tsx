@@ -22,8 +22,8 @@ import {
   FileCheck,
 } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
-import { Button } from '@/components/ui/Button';
-import { getTeachingLevelLabel, getCourseTypeLabel, formatCredits } from '@/lib/utils/course.utils';
+import { Button } from '@/shared/components';
+import { getTeachingLevelLabel, getCourseTypeLabel, formatCredits } from '@/features/courses/utils';
 
 export function CourseModal(): JSX.Element {
   const { modalState, closeModal } = useCourseContext();
@@ -43,7 +43,7 @@ export function CourseModal(): JSX.Element {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-black/80" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -191,25 +191,13 @@ export function CourseModal(): JSX.Element {
                 {/* Footer */}
                 <div className="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={<Download className="h-4 w-4" />}
-                    >
-                      Descargar Info
-                    </Button>
-                    <Button variant="outline" size="sm" icon={<Share2 className="h-4 w-4" />}>
-                      Compartir
-                    </Button>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 ">
                     <Button variant="secondary" size="sm" onClick={closeModal}>
                       <X className="h-4 w-4" />
                       Cerrar
                     </Button>
-                    <Button variant="danger" size="sm" icon={<Plus className="h-4 w-4" />}>
-                      Agregar a Mi Plan
-                    </Button>
+            
                   </div>
                 </div>
               </Dialog.Panel>

@@ -19,13 +19,13 @@ import {
 } from '@tanstack/react-table';
 import { ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
-import type { Course } from '@/lib/types/course.types';
-import { Button } from '@/components/ui/Button';
-import { exportToCSV } from '@/lib/utils/course.utils';
-import { TABLE_PAGINATION_CONFIG, MESSAGES } from '@/lib/constants/courses.constants';
+import type { Course } from '@/features/courses/types';
+import { Button } from '@/shared/components';
+import { exportToCSV } from '@/features/courses/utils';
+import { TABLE_PAGINATION_CONFIG, MESSAGES } from '@/features/courses/constants';
 
 export function CourseTable(): JSX.Element {
-  const { filteredCourses, openModal } = useCourseContext();
+  const { filteredCourses, openModal, isLoading, error } = useCourseContext();
   const [sorting, setSorting] = useState<SortingState>([]);
 
   /**
@@ -94,7 +94,18 @@ export function CourseTable(): JSX.Element {
     exportToCSV(filteredCourses, 'cursos-upc');
   };
 
-  if (filteredCourses.length === 0) {
+  if (isLoading) {
+    return (
+      <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
+        <div className="flex items-center justify-center gap-3">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-600"></div>
+          <p className="text-gray-600 text-lg">Buscando cursos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (filteredCourses.length === 0 && !error) {
     return (
       <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
         <p className="text-gray-500 text-lg">{MESSAGES.NO_RESULTS}</p>
