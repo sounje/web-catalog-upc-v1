@@ -3,7 +3,7 @@
  * Evitando magic strings y numbers según Clean Code
  */
 
-import type { FacultyOption, ProgramOption, TeachingLevel, CourseType } from '../types/course.types';
+import type { FacultyOption, ProgramOption, TeachingLevel, CourseType } from '@/features/courses/types';
 
 /**
  * Opciones de nivel de enseñanza

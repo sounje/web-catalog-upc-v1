@@ -4,7 +4,7 @@
  */
 
 import type { ButtonHTMLAttributes, JSX, ReactNode } from 'react';
-import { cn } from '@/lib/utils/course.utils';
+import { cn } from '@/lib/utils';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';

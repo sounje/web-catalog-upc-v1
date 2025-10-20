@@ -5,7 +5,7 @@
 
 import { useId } from 'react';
 import type { InputHTMLAttributes } from 'react';
-import { cn } from '@/lib/utils/course.utils';
+import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 
 interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {

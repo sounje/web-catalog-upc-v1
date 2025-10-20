@@ -74,3 +74,12 @@ export interface FormFieldProps {
   required?: boolean;
 }
 
+/**
+ * Re-exportar tipos de API para uso interno
+ */
+export type { 
+  ApiCourseResponse, 
+  ApiCourseFilter, 
+  ApiCourseRequest 
+} from './api.types';
+

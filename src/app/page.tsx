@@ -8,10 +8,7 @@
 import { CourseProvider, useCourseContext } from '@/context/CourseContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Footer } from '@/components/layout/Footer';
-import { CourseFilters } from '@/components/courses/CourseFilters';
-import { CourseTable } from '@/components/courses/CourseTable';
-import { WelcomeView } from '@/components/courses/WelcomeView';
-import { CourseModal } from '@/components/courses/CourseModal';
+import { CourseFilters, CourseTable, WelcomeView, CourseModal } from '@/features/courses/components';
 import { JSX } from 'react';
 
 /**

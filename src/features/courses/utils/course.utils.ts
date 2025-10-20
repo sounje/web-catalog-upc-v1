@@ -3,7 +3,7 @@
  * Siguiendo principios de Clean Code: funciones pequeñas y específicas
  */
 
-import type { Course, CourseFilters } from '../types/course.types';
+import type { Course, CourseFilters } from '@/features/courses/types';
 
 /**
  * Filtra cursos basándose en los criterios especificados

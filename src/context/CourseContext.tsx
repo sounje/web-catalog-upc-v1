@@ -7,9 +7,10 @@
  */
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import type { Course, CourseFilters, CourseModalState } from '@/lib/types/course.types';
-import { filterCourses } from '@/lib/utils/course.utils';
+import type { Course, CourseFilters, CourseModalState } from '@/features/courses/types';
+import { filterCourses } from '@/features/courses/utils';
 import { MOCK_COURSES } from '@/data/mock-courses';
+import { searchCourses } from '@/features/courses/services';
 
 interface CourseContextValue {
   // Estado
@@ -18,14 +19,17 @@ interface CourseContextValue {
   filters: CourseFilters;
   modalState: CourseModalState;
   isSearchActive: boolean;
+  isLoading: boolean;
+  error: string | null;
   
   // Acciones
   updateFilters: (newFilters: Partial<CourseFilters>) => void;
   resetFilters: () => void;
-  performSearch: () => void;
+  performSearch: () => Promise<void>;
   openModal: (course: Course) => void;
   closeModal: () => void;
   clearSearch: () => void;
+  clearError: () => void;
 }
 
 const CourseContext = createContext<CourseContextValue | undefined>(undefined);
@@ -51,6 +55,8 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
     course: null,
   });
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Actualiza los filtros parcialmente
@@ -71,11 +77,27 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
   /**
    * Ejecuta la búsqueda aplicando los filtros actuales
    */
-  const performSearch = useCallback(() => {
-    const results = filterCourses(allCourses, filters);
-    setFilteredCourses(results);
-    setIsSearchActive(true);
-  }, [allCourses, filters]);
+  const performSearch = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Usar la API real en lugar de datos mockeados
+      const results = await searchCourses(filters);
+      setFilteredCourses(results);
+      setIsSearchActive(true);
+    } catch (err) {
+      console.error('Error en performSearch:', err);
+      setError(err instanceof Error ? err.message : 'Error desconocido');
+      
+      // Fallback a datos mockeados en caso de error
+      const fallbackResults = filterCourses(allCourses, filters);
+      setFilteredCourses(fallbackResults);
+      setIsSearchActive(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [filters, allCourses]);
 
   /**
    * Abre el modal con la información del curso
@@ -102,7 +124,15 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
    */
   const clearSearch = useCallback(() => {
     resetFilters();
+    setError(null);
   }, [resetFilters]);
+
+  /**
+   * Limpia el error actual
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   const value: CourseContextValue = {
     allCourses,
@@ -110,12 +140,15 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
     filters,
     modalState,
     isSearchActive,
+    isLoading,
+    error,
     updateFilters,
     resetFilters,
     performSearch,
     openModal,
     closeModal,
     clearSearch,
+    clearError,
   };
 
   return <CourseContext.Provider value={value}>{children}</CourseContext.Provider>;
