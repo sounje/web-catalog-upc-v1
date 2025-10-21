@@ -5,74 +5,60 @@
 
 /**
  * Estructura de la respuesta de la API
+ * Actualizado según nueva estructura del backend
  */
 export interface ApiCourseResponse {
-  curseCode: string;
-  curseName: string;
-  careerName: string;
-  facultyName: string;
-  credit: number;
-  courseTypeName: string;
-  carrerCourseDescription?: string;
-  graduateProfile?: string;
-  requirement?: string;
+  id: string;
+  code: string;
+  course: string;
+  career: string;
+  credits: number;
+  faculty: string;
+  type: string;
+  incoming: string;
+  graduate: string;
+  requirement: string;
 }
 
 /**
  * Filtros que envía la API
+ * Nueva estructura actualizada del backend
  */
 export interface ApiCourseFilter {
-  nameCuse: string;
-  LevelOfEducation: {
-    PregradoTraditional: boolean;
-    PregradoEpe: boolean;
-    mastery: boolean;
-  };
-  Faculty: string;
-  program: string;
-  TypeCurtse: {
-    mandatory: boolean;
-    elective: boolean;
-  };
+  name: string;       // Término de búsqueda
+  facultad: string;   // ID de la facultad (UUID)
+  programa: string;   // ID del programa (UUID)
+  nivel: string;      // "UAC" | "UFC" | "UAC-UFC" | ""
+  tipo: string;       // "Obligatorio" | "Electivo" | ""
 }
 
 /**
- * Request completo para la API
+ * Request completo para la API (sin wrapper "filter")
  */
-export interface ApiCourseRequest {
-  filter: ApiCourseFilter;
-}
+export interface ApiCourseRequest extends ApiCourseFilter {}
 
 /**
- * Mapeo de niveles de enseñanza
+ * Mapeo de niveles de enseñanza al formato de la API
+ * pregrado-epe → UAC (Pregrado Tradicional)
+ * pregrado-tradicional → UFC (Pregrado EPE)
+ * Ambos seleccionados → UAC-UFC
  */
 export const TEACHING_LEVEL_MAPPING = {
-  'pregrado-tradicional': 'PregradoTraditional',
-  'pregrado-epe': 'PregradoEpe',
-  'postgrado': 'mastery',
+  'pregrado-epe': 'UAC',
+  'pregrado-tradicional': 'UFC',
+  'postgrado': '', // Postgrado no se envía por ahora
 } as const;
 
 /**
- * Mapeo de tipos de curso
+ * Mapeo de tipos de curso al formato de la API
  */
 export const COURSE_TYPE_MAPPING = {
-  'obligatorio': 'mandatory',
-  'electivo': 'elective',
+  'obligatorio': 'Obligatorio',
+  'electivo': 'Electivo',
 } as const;
 
 /**
- * Mapeo inverso de tipos de curso
+ * IDs hardcodeados temporalmente para facultad y programa
  */
-export const COURSE_TYPE_REVERSE_MAPPING = {
-  'Obligatorio': 'obligatorio',
-  'Electivo': 'electivo',
-} as const;
-
-/**
- * Mapeo inverso de niveles de enseñanza
- */
-export const TEACHING_LEVEL_REVERSE_MAPPING = {
-  'Pregrado Tradicional': 'pregrado-tradicional',
-  'Pregrado EPE': 'pregrado-epe',
-  'Postgrado': 'postgrado',
-} as const;
+export const TEMP_FACULTY_ID = '47B6B785-60BA-4948-B1F5-C39C663F83A7';
+export const TEMP_PROGRAM_ID = '167D3B55-3852-4C02-824D-05CAF812712D';

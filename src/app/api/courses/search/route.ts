@@ -13,13 +13,13 @@ export async function POST(request: NextRequest) {
   try {
     // Obtener el body de la request
     const body = await request.json();
-    console.log(body);
-    console.log(API_ENDPOINT);
+    console.log('📤 Request enviado al backend:', JSON.stringify(body, null, 2));
+    console.log('🔗 Endpoint:', API_ENDPOINT);
     
-    // Validar que tenga la estructura correcta
-    if (!body.filter) {
+    // Validar que tenga los campos requeridos
+    if (!body.name && !body.facultad && !body.programa) {
       return NextResponse.json(
-        { error: 'Filtro requerido' },
+        { error: 'Al menos un filtro es requerido' },
         { status: 400 }
       );
     }
