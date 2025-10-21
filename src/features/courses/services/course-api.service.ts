@@ -13,8 +13,7 @@ import { mapFiltersToApi, mapApiResponseToCourses } from '@/features/courses/map
 export async function searchCourses(filters: CourseFilters): Promise<Course[]> {
   try {
     // Mapear filtros al formato de la API
-    const apiFilters = mapFiltersToApi(filters);
-    const requestBody: ApiCourseRequest = { filter: apiFilters };
+    const requestBody: ApiCourseRequest = mapFiltersToApi(filters);
 
     // Realizar la petición a nuestra API Route
     const response = await fetch('/api/courses/search', {

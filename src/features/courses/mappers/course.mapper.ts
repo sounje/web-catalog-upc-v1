@@ -7,54 +7,75 @@ import type { Course, CourseFilters } from '@/features/courses/types';
 import type { 
   ApiCourseResponse, 
   ApiCourseFilter,
+} from '@/features/courses/types';
+import { 
   TEACHING_LEVEL_MAPPING,
   COURSE_TYPE_MAPPING,
-  COURSE_TYPE_REVERSE_MAPPING,
-  TEACHING_LEVEL_REVERSE_MAPPING
+  TEMP_FACULTY_ID,
+  TEMP_PROGRAM_ID
 } from '@/features/courses/types';
 
 /**
  * Mapea los filtros del frontend al formato de la API
+ * Nueva estructura: { name, facultad, programa, nivel, tipo }
  */
 export function mapFiltersToApi(filters: CourseFilters): ApiCourseFilter {
-  // Mapear niveles de enseñanza
-  const levelOfEducation = {
-    PregradoTraditional: filters.teachingLevels.includes('pregrado-tradicional'),
-    PregradoEpe: filters.teachingLevels.includes('pregrado-epe'),
-    mastery: filters.teachingLevels.includes('postgrado'),
-  };
-
-  // Mapear tipos de curso
-  const typeCourse = {
-    mandatory: filters.courseTypes.includes('obligatorio'),
-    elective: filters.courseTypes.includes('electivo'),
-  };
+  // Mapear nivel de enseñanza
+  const nivel = mapTeachingLevelsToApi(filters.teachingLevels);
+  
+  // Mapear tipo de curso (radio button - solo uno seleccionado)
+  const tipo = filters.courseTypes.length > 0 
+    ? COURSE_TYPE_MAPPING[filters.courseTypes[0]] 
+    : '';
 
   return {
-    nameCuse: filters.searchTerm,
-    LevelOfEducation: levelOfEducation,
-    Faculty: filters.faculty,
-    program: filters.program,
-    TypeCurtse: typeCourse,
+    name: filters.searchTerm,
+    facultad: TEMP_FACULTY_ID,  // Hardcodeado temporalmente
+    programa: TEMP_PROGRAM_ID,  // Hardcodeado temporalmente
+    nivel: nivel,
+    tipo: tipo,
   };
 }
 
 /**
+ * Mapea los niveles de enseñanza seleccionados al formato de la API
+ * - pregrado-epe → UAC
+ * - pregrado-tradicional → UFC
+ * - Ambos → UAC-UFC
+ * - Ninguno/Postgrado → ""
+ */
+function mapTeachingLevelsToApi(teachingLevels: string[]): string {
+  const hasUAC = teachingLevels.includes('pregrado-epe');
+  const hasUFC = teachingLevels.includes('pregrado-tradicional');
+  
+  if (hasUAC && hasUFC) {
+    return 'UAC-UFC';
+  } else if (hasUAC) {
+    return 'UAC';
+  } else if (hasUFC) {
+    return 'UFC';
+  }
+  
+  return '';
+}
+
+/**
  * Mapea la respuesta de la API al formato interno
+ * Actualizado según nueva estructura del backend
  */
 export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
   return {
-    id: generateCourseId(apiCourse.curseCode),
-    code: apiCourse.curseCode,
-    name: apiCourse.curseName,
-    program: apiCourse.careerName,
-    credits: apiCourse.credit,
-    faculty: apiCourse.facultyName,
-    description: apiCourse.carrerCourseDescription,
-    achievement: apiCourse.graduateProfile,
+    id: apiCourse.id, // Ahora la API proporciona el ID directamente
+    code: apiCourse.code,
+    name: apiCourse.course,
+    program: apiCourse.career,
+    credits: apiCourse.credits,
+    faculty: apiCourse.faculty,
+    description: apiCourse.incoming,
+    achievement: apiCourse.graduate,
     prerequisites: apiCourse.requirement,
-    courseType: mapCourseTypeFromApi(apiCourse.courseTypeName),
-    teachingLevel: mapTeachingLevelFromApi(apiCourse.facultyName),
+    courseType: mapCourseTypeFromApi(apiCourse.type),
+    teachingLevel: mapTeachingLevelFromApi(apiCourse.faculty),
   };
 }
 
@@ -74,14 +95,17 @@ function generateCourseId(code: string): string {
 
 /**
  * Mapea el tipo de curso de la API al tipo interno
+ * Actualizado para soportar mayúsculas
  */
 function mapCourseTypeFromApi(apiType: string): 'obligatorio' | 'electivo' {
+  const normalizedType = apiType.toUpperCase();
+  
   const mapping: Record<string, 'obligatorio' | 'electivo'> = {
-    'Obligatorio': 'obligatorio',
-    'Electivo': 'electivo',
+    'OBLIGATORIO': 'obligatorio',
+    'ELECTIVO': 'electivo',
   };
   
-  return mapping[apiType] || 'obligatorio';
+  return mapping[normalizedType] || 'obligatorio';
 }
 
 /**
@@ -100,28 +124,31 @@ function mapTeachingLevelFromApi(facultyName: string): 'pregrado-tradicional' | 
 
 /**
  * Mapea un curso interno al formato de la API (para futuras funcionalidades)
+ * Actualizado según nueva estructura del backend
  */
 export function mapCourseToApi(course: Course): ApiCourseResponse {
   return {
-    curseCode: course.code,
-    curseName: course.name,
-    careerName: course.program,
-    facultyName: course.faculty,
-    credit: course.credits,
-    courseTypeName: mapCourseTypeToApi(course.courseType),
-    carrerCourseDescription: course.description,
-    graduateProfile: course.achievement,
-    requirement: course.prerequisites,
+    id: course.id,
+    code: course.code,
+    course: course.name,
+    career: course.program,
+    credits: course.credits,
+    faculty: course.faculty,
+    type: mapCourseTypeToApi(course.courseType),
+    incoming: course.description || 'N/A',
+    graduate: course.achievement || 'N/A',
+    requirement: course.prerequisites || 'N/A',
   };
 }
 
 /**
  * Mapea el tipo de curso interno al formato de la API
+ * Actualizado para generar mayúsculas
  */
 function mapCourseTypeToApi(courseType: 'obligatorio' | 'electivo'): string {
   const mapping: Record<'obligatorio' | 'electivo', string> = {
-    'obligatorio': 'Obligatorio',
-    'electivo': 'Electivo',
+    'obligatorio': 'OBLIGATORIO',
+    'electivo': 'ELECTIVO',
   };
   
   return mapping[courseType];
