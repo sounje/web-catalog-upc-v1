@@ -6,8 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiCourseRequest, ApiCourseResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL ;
-const API_ENDPOINT = `${BACKEND_URL}api/curso/consultar-cursor`;
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080/';
+const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'api/curso/consultar-cursor';
+const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CONSULTA_CURSO;
 
 export async function POST(request: NextRequest) {
   try {
