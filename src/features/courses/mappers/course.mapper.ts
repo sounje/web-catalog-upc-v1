@@ -9,10 +9,7 @@ import type {
   ApiCourseFilter,
 } from '@/features/courses/types';
 import { 
-  TEACHING_LEVEL_MAPPING,
   COURSE_TYPE_MAPPING,
-  TEMP_FACULTY_ID,
-  TEMP_PROGRAM_ID
 } from '@/features/courses/types';
 
 /**
@@ -86,13 +83,6 @@ export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
  */
 export function mapApiResponseToCourses(apiCourses: ApiCourseResponse[]): Course[] {
   return apiCourses.map(mapApiResponseToCourse);
-}
-
-/**
- * Genera un ID único para el curso
- */
-function generateCourseId(code: string): string {
-  return `course-${code.toLowerCase().replace(/\s+/g, '-')}`;
 }
 
 /**

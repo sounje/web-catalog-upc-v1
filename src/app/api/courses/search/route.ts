@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
-import type { ApiCourseRequest, ApiCourseResponse } from '@/features/courses/types';
+import type { ApiCourseResponse } from '@/features/courses/types';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216/';
 const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'api/CursosSearch/GetCursosBySearch';
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-      // @ts-ignore - Node.js fetch acepta agent pero TypeScript no lo reconoce
+      // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 

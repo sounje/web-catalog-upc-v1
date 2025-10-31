@@ -10,7 +10,7 @@ export * from './components';
 export * from './services';
 
 // Tipos
-export * from './types';
+export * from '../../lib/types';
 
 // Mappers
 export * from './mappers';

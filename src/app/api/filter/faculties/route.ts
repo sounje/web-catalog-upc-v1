@@ -16,7 +16,7 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false
 });
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     console.log('📤 Solicitando facultades desde:', API_ENDPOINT);
     
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       headers: {
         'Accept': 'application/json',
       },
-      // @ts-ignore - Node.js fetch acepta agent pero TypeScript no lo reconoce
+      // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
