@@ -28,7 +28,7 @@ export interface ApiCourseFilter {
   name: string;       // Término de búsqueda
   facultad: string;   // ID de la facultad (UUID)
   programa: string;   // ID del programa (UUID)
-  nivel: string;      // "UAC" | "UFC" | "UAC-UFC" | ""
+  nivel: string;      // "UAC" | "UFC" | "EMA" | Combinaciones: "UAC-UFC", "UAC-EMA", "UFC-EMA", "UAC-UFC-EMA" | ""
   tipo: string;       // "Obligatorio" | "Electivo" | ""
 }
 
@@ -39,14 +39,20 @@ export interface ApiCourseRequest extends ApiCourseFilter {}
 
 /**
  * Mapeo de niveles de enseñanza al formato de la API
- * pregrado-epe → UAC (Pregrado Tradicional)
- * pregrado-tradicional → UFC (Pregrado EPE)
- * Ambos seleccionados → UAC-UFC
+ * - pregrado-epe → UAC (Pregrado EPE)
+ * - pregrado-tradicional → UFC (Pregrado Tradicional)
+ * - maestria → EMA (Escuela de Maestría)
+ * 
+ * Cuando se seleccionan múltiples niveles, se combinan con guiones:
+ * - UAC + UFC → "UAC-UFC"
+ * - UAC + EMA → "UAC-EMA"
+ * - UFC + EMA → "UFC-EMA"
+ * - UAC + UFC + EMA → "UAC-UFC-EMA"
  */
 export const TEACHING_LEVEL_MAPPING = {
   'pregrado-epe': 'UAC',
   'pregrado-tradicional': 'UFC',
-  'postgrado': '', // Postgrado no se envía por ahora
+  'maestria': 'EMA',
 } as const;
 
 /**
@@ -60,5 +66,21 @@ export const COURSE_TYPE_MAPPING = {
 /**
  * IDs hardcodeados temporalmente para facultad y programa
  */
-export const TEMP_FACULTY_ID = '47B6B785-60BA-4948-B1F5-C39C663F83A7';
+export const TEMP_FACULTY_ID = '6C2BD140-10CB-47AD-AFDB-F69CEADD391D';
 export const TEMP_PROGRAM_ID = '167D3B55-3852-4C02-824D-05CAF812712D';
+
+/**
+ * Respuesta de la API de Facultades
+ */
+export interface ApiFacultyResponse {
+  id: string;
+  name: string;
+}
+
+/**
+ * Respuesta de la API de Carreras
+ */
+export interface ApiCareerResponse {
+  id: string;
+  name: string;
+}

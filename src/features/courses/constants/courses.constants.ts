@@ -11,6 +11,7 @@ import type { FacultyOption, ProgramOption, TeachingLevel, CourseType } from '@/
 export const TEACHING_LEVEL_OPTIONS: Array<{ value: TeachingLevel; label: string }> = [
   { value: 'pregrado-tradicional', label: 'Pregrado Tradicional' },
   { value: 'pregrado-epe', label: 'Pregrado EPE' },
+  { value: 'maestria', label: 'Maestría' },
 ] as const;
 
 /**

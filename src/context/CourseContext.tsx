@@ -25,7 +25,7 @@ interface CourseContextValue {
   // Acciones
   updateFilters: (newFilters: Partial<CourseFilters>) => void;
   resetFilters: () => void;
-  performSearch: () => Promise<void>;
+  performSearch: (searchFilters?: CourseFilters) => Promise<void>;
   openModal: (course: Course) => void;
   closeModal: () => void;
   clearSearch: () => void;
@@ -75,15 +75,19 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
   }, []);
 
   /**
-   * Ejecuta la búsqueda aplicando los filtros actuales
+   * Ejecuta la búsqueda aplicando los filtros proporcionados o los actuales
+   * @param searchFilters - Filtros a aplicar (opcional, usa el estado actual si no se proporciona)
    */
-  const performSearch = useCallback(async () => {
+  const performSearch = useCallback(async (searchFilters?: CourseFilters) => {
     try {
       setIsLoading(true);
       setError(null);
       
+      // Usar los filtros proporcionados o los del estado
+      const filtersToUse = searchFilters || filters;
+      
       // Usar la API real en lugar de datos mockeados
-      const results = await searchCourses(filters);
+      const results = await searchCourses(filtersToUse);
       setFilteredCourses(results);
       setIsSearchActive(true);
     } catch (err) {
@@ -91,7 +95,8 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
       setError(err instanceof Error ? err.message : 'Error desconocido');
       
       // Fallback a datos mockeados en caso de error
-      const fallbackResults = filterCourses(allCourses, filters);
+      const filtersToUse = searchFilters || filters;
+      const fallbackResults = filterCourses(allCourses, filtersToUse);
       setFilteredCourses(fallbackResults);
       setIsSearchActive(true);
     } finally {

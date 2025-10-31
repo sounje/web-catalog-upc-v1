@@ -5,7 +5,9 @@ Sistema de catálogo de cursos para la Universidad Peruana de Ciencias Aplicadas
 ## 🚀 Características
 
 - ✅ **Filtrado avanzado** de cursos por múltiples criterios
+- ✅ **Filtros dinámicos** con carga desde API (Facultades y Carreras en cascada)
 - ✅ **Tabla interactiva** con ordenamiento y paginación
+- ✅ **Exportación a Excel** con todos los detalles de los cursos
 - ✅ **Modal detallado** con información completa de cada curso
 - ✅ **Diseño responsive** optimizado para móvil, tablet y desktop
 - ✅ **TypeScript estricto** para máxima seguridad de tipos
@@ -28,6 +30,7 @@ Sistema de catálogo de cursos para la Universidad Peruana de Ciencias Aplicadas
 - **@headlessui/react** - Componentes UI accesibles (Modal)
 - **react-hook-form** - Manejo de formularios
 - **zod** - Validación de esquemas
+- **xlsx** (SheetJS) - Exportación a Excel
 - **lucide-react** - Iconos SVG optimizados
 - **clsx** - Utilidad para clases condicionales
 
@@ -36,6 +39,15 @@ Sistema de catálogo de cursos para la Universidad Peruana de Ciencias Aplicadas
 ```
 src/
 ├── app/                          # App Router de Next.js
+│   ├── api/                     # API Routes (Next.js middleware)
+│   │   ├── courses/            
+│   │   │   └── search/         # Búsqueda de cursos
+│   │   │       └── route.ts
+│   │   └── filter/             
+│   │       ├── faculties/      # Obtener facultades
+│   │       │   └── route.ts
+│   │       └── careers/        # Obtener carreras
+│   │           └── route.ts
 │   ├── layout.tsx               # Layout raíz
 │   ├── page.tsx                 # Página principal
 │   └── globals.css              # Estilos globales
@@ -105,6 +117,7 @@ src/
 ### Prerrequisitos
 - Node.js 18+ 
 - npm o yarn o pnpm
+- Backend API corriendo (puerto 5216 por defecto)
 
 ### Instalación
 
@@ -113,16 +126,37 @@ src/
 git clone [URL_DEL_REPO]
 
 # Navegar al directorio
-cd upc-client
+cd upc-client-alumno
 
 # Instalar dependencias
 npm install
+
+# Configurar variables de entorno (ver sección "Configuración")
+# Crear archivo .env.local
 
 # Iniciar servidor de desarrollo
 npm run dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+
+### ⚙️ Configuración
+
+Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables:
+
+```env
+# URL base del backend (sin trailing slash)
+BACKEND_URL=http://localhost:5216
+
+# Endpoint para consulta de cursos (relativo a BACKEND_URL)
+API_ENDPOINT_CONSULTA_CURSO=api/curso/consultar-cursor
+```
+
+**Para producción**, actualiza las URLs según tu entorno:
+```env
+BACKEND_URL=https://api-produccion.upc.edu.pe
+API_ENDPOINT_CONSULTA_CURSO=api/curso/consultar-cursor
+```
 
 ## 📝 Scripts Disponibles
 
@@ -147,6 +181,7 @@ npm run lint         # Ejecuta ESLint
 - **Paginación**: 10 resultados por página (configurable)
 - **Navegación**: Anterior/Siguiente
 - **Click en filas**: Abre modal con detalles completos
+- **Exportación**: Descarga todos los resultados a Excel (.xlsx) con un click
 
 ### Modal de Detalle
 - Información completa del curso
@@ -161,12 +196,15 @@ npm run lint         # Ejecuta ESLint
 
 ## 🔄 Flujo de Datos
 
+### Flujo de Filtros y Búsqueda
 ```
 Usuario interactúa con filtros
          ↓
 CourseContext actualiza state
          ↓
-Filtros se aplican a data mockeada
+Service llama a API Route local (/api/...)
+         ↓
+API Route hace proxy al Backend externo
          ↓
 CourseTable muestra resultados filtrados
          ↓
@@ -174,6 +212,29 @@ Usuario hace click en curso
          ↓
 CourseModal se abre con detalles
 ```
+
+### 🔌 Arquitectura de API Routes
+
+Este proyecto usa **Next.js API Routes** como capa intermedia (BFF - Backend for Frontend) entre el cliente y las APIs externas:
+
+```
+Frontend (Browser) → API Route (Next.js) → Backend API (C#/.NET)
+```
+
+**Ventajas:**
+- ✅ Oculta endpoints reales del backend
+- ✅ Centraliza la lógica de comunicación HTTP
+- ✅ Permite agregar autenticación/autorización
+- ✅ Maneja certificados SSL en desarrollo
+- ✅ Facilita el testing y debugging
+
+**Endpoints disponibles:**
+
+| Método | Ruta | Backend Real | Descripción |
+|--------|------|--------------|-------------|
+| GET | `/api/filter/faculties` | `{BACKEND_URL}/api/Filter/GetFaculties` | Obtiene lista de facultades |
+| POST | `/api/filter/careers` | `{BACKEND_URL}/api/Filter/GetCareers` | Obtiene carreras por facultad |
+| POST | `/api/courses/search` | `{BACKEND_URL}/api/curso/consultar-cursor` | Busca cursos con filtros |
 
 ## 🎨 Guía de Estilos
 
@@ -191,23 +252,45 @@ CourseModal se abre con detalles
 
 ## 🔮 Próximos Pasos / Roadmap
 
-- [ ] Integración con API real de backend
-- [ ] Implementar exportación a Excel/CSV funcional
+- [x] ✅ **Integración con API real de backend**
+  - [x] Búsqueda de cursos
+  - [x] Carga dinámica de facultades
+  - [x] Carga dinámica de carreras (filtro en cascada)
+- [x] ✅ **Implementar exportación a Excel funcional** con todos los campos
 - [ ] Agregar funcionalidad "Agregar a Mi Plan"
-- [ ] Implementar búsqueda en tiempo real
+- [ ] Implementar búsqueda en tiempo real (debounce)
 - [ ] Agregar más filtros (horarios, profesores, etc.)
 - [ ] Agregar favoritos persistentes (localStorage)
 - [ ] Implementar sistema de recomendaciones
 - [ ] Agregar tests unitarios y de integración
 - [ ] Implementar i18n (internacionalización)
 - [ ] Mejorar SEO con metadata dinámica
+- [ ] Agregar autenticación JWT en API Routes
 
-## 📚 Data Mockeada
+## 📚 Integración con Backend
 
-El proyecto incluye 49 cursos mockeados con información completa para desarrollo y pruebas. Esta data está en `src/data/mock-courses.ts` y será reemplazada por llamadas a API en el futuro.
+✅ El proyecto está **completamente integrado** con las APIs del backend:
 
+### APIs Implementadas
 
+1. **GET /api/Filter/GetFaculties**
+   - Carga dinámica de facultades
+   - Se consume al inicializar el componente de filtros
+
+2. **POST /api/Filter/GetCareers**
+   - Carga dinámica de carreras por facultad
+   - Filtro en cascada (depende de la facultad seleccionada)
+   - Envía el GUID de la facultad como parámetro
+
+3. **POST /api/curso/consultar-cursor**
+   - Búsqueda de cursos con múltiples filtros
+   - Envía GUIDs de facultad y programa
+   - Parámetros: name, facultad, programa, nivel, tipo
+
+### Fallback a Data Mockeada
+
+El proyecto incluye 49 cursos mockeados en `src/data/mock-courses.ts` que se usan como **fallback** si las APIs no están disponibles o fallan.
 
 ---
 
-**Nota**: Este proyecto está en desarrollo activo. La data es mockeada y será reemplazada por integraciones reales con APIs en futuras versiones.
+**Desarrollado con ❤️ siguiendo principios de Clean Code y arquitectura escalable**
