@@ -30,8 +30,8 @@ export function mapFiltersToApi(filters: CourseFilters): ApiCourseFilter {
 
   return {
     name: filters.searchTerm,
-    facultad: TEMP_FACULTY_ID,  // Hardcodeado temporalmente
-    programa: TEMP_PROGRAM_ID,  // Hardcodeado temporalmente
+    facultad: filters.faculty || '',  // ID de la facultad seleccionada (GUID)
+    programa: filters.program || '',  // ID del programa seleccionado (GUID)
     nivel: nivel,
     tipo: tipo,
   };
@@ -41,22 +41,24 @@ export function mapFiltersToApi(filters: CourseFilters): ApiCourseFilter {
  * Mapea los niveles de enseñanza seleccionados al formato de la API
  * - pregrado-epe → UAC
  * - pregrado-tradicional → UFC
- * - Ambos → UAC-UFC
- * - Ninguno/Postgrado → ""
+ * - maestria → EMA
+ * - Combinaciones: UAC-UFC, UAC-EMA, UFC-EMA, UAC-UFC-EMA
+ * - Ninguno → ""
  */
 function mapTeachingLevelsToApi(teachingLevels: string[]): string {
   const hasUAC = teachingLevels.includes('pregrado-epe');
   const hasUFC = teachingLevels.includes('pregrado-tradicional');
+  const hasEMA = teachingLevels.includes('maestria');
   
-  if (hasUAC && hasUFC) {
-    return 'UAC-UFC';
-  } else if (hasUAC) {
-    return 'UAC';
-  } else if (hasUFC) {
-    return 'UFC';
-  }
+  // Construir el string según las combinaciones seleccionadas
+  const niveles: string[] = [];
   
-  return '';
+  if (hasUAC) niveles.push('UAC');
+  if (hasUFC) niveles.push('UFC');
+  if (hasEMA) niveles.push('EMA');
+  
+  // Unir con guiones si hay múltiples niveles seleccionados
+  return niveles.join('-');
 }
 
 /**
@@ -112,10 +114,16 @@ function mapCourseTypeFromApi(apiType: string): 'obligatorio' | 'electivo' {
  * Mapea el nivel de enseñanza basado en la facultad
  * (Esto es una aproximación, idealmente la API debería devolver el nivel)
  */
-function mapTeachingLevelFromApi(facultyName: string): 'pregrado-tradicional' | 'pregrado-epe' | 'postgrado' {
+function mapTeachingLevelFromApi(facultyName: string): 'pregrado-tradicional' | 'pregrado-epe' | 'maestria' {
   // Lógica simple basada en el nombre de la facultad
-  if (facultyName.toLowerCase().includes('postgrado') || facultyName.toLowerCase().includes('maestría')) {
-    return 'postgrado';
+  if (facultyName.toLowerCase().includes('postgrado') || 
+      facultyName.toLowerCase().includes('maestría') || 
+      facultyName.toLowerCase().includes('maestria')) {
+    return 'maestria';
+  }
+  
+  if (facultyName.toLowerCase().includes('epe')) {
+    return 'pregrado-epe';
   }
   
   // Por defecto, asumimos pregrado tradicional

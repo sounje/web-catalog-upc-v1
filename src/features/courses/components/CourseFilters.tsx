@@ -9,20 +9,25 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Search, RotateCcw, X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCourseContext } from '@/context/CourseContext';
-import type { CourseFilters } from '@/features/courses/types';
+import type { CourseFilters, ApiFacultyResponse, ApiCareerResponse, TeachingLevel, CourseType } from '@/features/courses/types';
 import { Button, Input, Select, Checkbox } from '@/shared/components';
 import {
   TEACHING_LEVEL_OPTIONS,
   COURSE_TYPE_OPTIONS,
-  FACULTY_OPTIONS,
-  PROGRAM_OPTIONS,
 } from '@/features/courses/constants';
 import { filterSchema, type FilterFormData } from '@/features/courses/validation';
+import { getFaculties, getCareersByFaculty } from '@/features/courses/services';
 
 export function CourseFilters(): React.JSX.Element {
   const { filters, updateFilters, performSearch, clearSearch, isLoading, error, clearError } = useCourseContext();
+
+  // Estado local para opciones dinámicas de facultades y carreras
+  const [facultyOptions, setFacultyOptions] = useState<ApiFacultyResponse[]>([]);
+  const [careerOptions, setCareerOptions] = useState<ApiCareerResponse[]>([]);
+  const [loadingFaculties, setLoadingFaculties] = useState(false);
+  const [loadingCareers, setLoadingCareers] = useState(false);
 
   const { register, handleSubmit, watch, reset, setValue } = useForm<FilterFormData>({
     resolver: zodResolver(filterSchema),
@@ -38,6 +43,54 @@ export function CourseFilters(): React.JSX.Element {
   const watchedTeachingLevels = watch('teachingLevels');
   const watchedCourseTypes = watch('courseTypes');
   const watchedFaculty = watch('faculty');
+  const watchedProgram = watch('program');
+
+  /**
+   * Carga las facultades al montar el componente
+   */
+  useEffect(() => {
+    const loadFaculties = async () => {
+      setLoadingFaculties(true);
+      try {
+        const faculties = await getFaculties();
+        setFacultyOptions(faculties);
+      } catch (error) {
+        console.error('Error al cargar facultades:', error);
+      } finally {
+        setLoadingFaculties(false);
+      }
+    };
+
+    loadFaculties();
+  }, []);
+
+  /**
+   * Carga las carreras cuando cambia la facultad seleccionada
+   */
+  useEffect(() => {
+    const loadCareers = async () => {
+      if (!watchedFaculty) {
+        setCareerOptions([]);
+        setValue('program', '');
+        return;
+      }
+
+      setLoadingCareers(true);
+      try {
+        const careers = await getCareersByFaculty(watchedFaculty);
+        setCareerOptions(careers);
+        // Limpiar el programa seleccionado al cambiar de facultad
+        setValue('program', '');
+      } catch (error) {
+        console.error('Error al cargar carreras:', error);
+        setCareerOptions([]);
+      } finally {
+        setLoadingCareers(false);
+      }
+    };
+
+    loadCareers();
+  }, [watchedFaculty, setValue]);
 
   /**
    * Selecciona automáticamente el primer tipo de curso al cargar el componente
@@ -52,8 +105,14 @@ export function CourseFilters(): React.JSX.Element {
    * Handler para submit del formulario
    */
   const onSubmit = async (data: FilterFormData): Promise<void> => {
-    updateFilters(data as CourseFilters);
-    await performSearch();
+    // Convertir los datos del formulario a CourseFilters
+    const searchFilters = data as CourseFilters;
+    
+    // Actualizar el estado del contexto
+    updateFilters(searchFilters);
+    
+    // Realizar la búsqueda con los filtros actuales (sin esperar la actualización del estado)
+    await performSearch(searchFilters);
   };
 
   /**
@@ -61,6 +120,7 @@ export function CourseFilters(): React.JSX.Element {
    */
   const handleClearFilters = (): void => {
     reset();
+    setCareerOptions([]);
     clearSearch();
     clearError();
   };
@@ -68,7 +128,7 @@ export function CourseFilters(): React.JSX.Element {
   /**
    * Handler para cambios en checkboxes de niveles de enseñanza
    */
-  const handleTeachingLevelChange = (value: string, checked: boolean): void => {
+  const handleTeachingLevelChange = (value: TeachingLevel, checked: boolean): void => {
     const current = watchedTeachingLevels;
     const updated = checked ? [...current, value] : current.filter((v) => v !== value);
     setValue('teachingLevels', updated);
@@ -77,7 +137,7 @@ export function CourseFilters(): React.JSX.Element {
   /**
    * Handler para cambios en radio buttons de tipos de curso
    */
-  const handleCourseTypeChange = (value: string): void => {
+  const handleCourseTypeChange = (value: CourseType): void => {
     setValue('courseTypes', [value]);
   };
 
@@ -107,7 +167,7 @@ export function CourseFilters(): React.JSX.Element {
                 key={option.value}
                 label={option.label}
                 checked={watchedTeachingLevels.includes(option.value)}
-                onChange={(e) => handleTeachingLevelChange(option.value, e.target.checked)}
+                onChange={(e) => handleTeachingLevelChange(option.value as TeachingLevel, e.target.checked)}
               />
             ))}
           </div>
@@ -116,13 +176,42 @@ export function CourseFilters(): React.JSX.Element {
         {/* Facultad */}
         <div>
           <h3 className="text-lg font-medium text-gray-900 mb-3">Facultad</h3>
-          <Select {...register('faculty')} options={FACULTY_OPTIONS} />
+          <Select 
+            {...register('faculty')} 
+            options={[
+              { value: '', label: loadingFaculties ? 'Cargando...' : 'Seleccionar...' },
+              ...facultyOptions.map(faculty => ({
+                value: faculty.id,
+                label: faculty.name
+              }))
+            ]}
+            disabled={loadingFaculties}
+          />
         </div>
 
         {/* Programa */}
         <div>
           <h3 className="text-lg font-medium text-gray-900 mb-3">Programa</h3>
-          <Select {...register('program')} options={PROGRAM_OPTIONS} />
+          <Select 
+            {...register('program')} 
+            options={[
+              { 
+                value: '', 
+                label: !watchedFaculty 
+                  ? 'Selecciona una facultad primero' 
+                  : loadingCareers 
+                    ? 'Cargando...' 
+                    : careerOptions.length === 0 
+                      ? 'No hay programas disponibles'
+                      : 'Seleccionar...' 
+              },
+              ...careerOptions.map(career => ({
+                value: career.id,
+                label: career.name
+              }))
+            ]}
+            disabled={!watchedFaculty || loadingCareers}
+          />
         </div>
 
         {/* Tipo de Curso */}
@@ -137,7 +226,7 @@ export function CourseFilters(): React.JSX.Element {
                   name="courseTypes"
                   value={option.value}
                   checked={watchedCourseTypes.includes(option.value)}
-                  onChange={() => handleCourseTypeChange(option.value)}
+                  onChange={() => handleCourseTypeChange(option.value as CourseType)}
                   className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500 focus:ring-2"
                 />
                 <label
@@ -177,7 +266,7 @@ export function CourseFilters(): React.JSX.Element {
             size="sm" 
             fullWidth 
             icon={<Search className="h-4 w-4" />}
-            disabled={!watchedFaculty || watchedFaculty === '' || isLoading}
+            disabled={!watchedFaculty || watchedFaculty === '' || !watchedProgram || watchedProgram === '' || isLoading}
           >
             {isLoading ? 'Buscando...' : 'Buscar'}
           </Button>

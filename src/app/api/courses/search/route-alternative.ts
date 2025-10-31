@@ -6,7 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ApiCourseRequest, ApiCourseResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216';
+const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'api/CursosSearch/GetCursosBySearch';
+const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CONSULTA_CURSO;
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
       if (TypeCurtse.elective) queryParams.append('elective', 'true');
     }
 
-    const API_ENDPOINT = `${BACKEND_URL}/api/curso/consultar-cursor?${queryParams.toString()}`;
+    const API_ENDPOINT = `${BACKEND_URL}api/CursosSearch/GetCursosBySearch?${queryParams.toString()}`;
 
     // Realizar la petición al backend con query parameters
     const response = await fetch(API_ENDPOINT, {

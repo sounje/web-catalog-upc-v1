@@ -100,7 +100,7 @@ export function getTeachingLevelLabel(level: string): string {
   const labels: Record<string, string> = {
     'pregrado-tradicional': 'Pregrado Tradicional',
     'pregrado-epe': 'Pregrado EPE',
-    'postgrado': 'Postgrado',
+    'maestria': 'Maestría',
   };
   return labels[level] || level;
 }
@@ -124,11 +124,59 @@ export function generateId(prefix: string): string {
 }
 
 /**
- * Exporta datos a CSV (simulado - para futura implementación)
+ * Exporta cursos a un archivo Excel con todos los campos
+ * @param courses - Array de cursos a exportar
+ * @param filename - Nombre del archivo sin extensión
  */
 export function exportToCSV(courses: Course[], filename: string): void {
-  // TODO: Implementar exportación real cuando se requiera
-  console.log(`Exportando ${courses.length} cursos a ${filename}.csv`);
-  alert(`Se exportarían ${courses.length} cursos. Funcionalidad pendiente de implementar.`);
+  // Importación dinámica para evitar problemas con SSR
+  import('xlsx').then((XLSX) => {
+    try {
+      // Mapear los datos del curso al formato deseado para el Excel
+      const excelData = courses.map((course) => ({
+        'Código': course.code,
+        'Curso': course.name,
+        'Programa': course.program,
+        'Créditos': course.credits,
+        'Facultad': course.faculty,
+        'Tipo de Curso': getCourseTypeLabel(course.courseType),
+        'Nivel de Enseñanza': getTeachingLevelLabel(course.teachingLevel),
+        'Descripción del Curso': course.description || 'N/A',
+        'Logro del Curso': course.achievement || 'N/A',
+        'Pre Requisito del Curso': course.prerequisites || 'N/A',
+      }));
+
+      // Crear el libro de trabajo (workbook)
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Cursos UPC');
+
+      // Ajustar el ancho de las columnas automáticamente
+      const columnWidths = [
+        { wch: 12 },  // Código
+        { wch: 40 },  // Curso
+        { wch: 30 },  // Programa
+        { wch: 10 },  // Créditos
+        { wch: 35 },  // Facultad
+        { wch: 15 },  // Tipo de Curso
+        { wch: 20 },  // Nivel de Enseñanza
+        { wch: 60 },  // Descripción del Curso
+        { wch: 60 },  // Logro del Curso
+        { wch: 40 },  // Pre Requisito del Curso
+      ];
+      worksheet['!cols'] = columnWidths;
+
+      // Generar el archivo Excel
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+
+      console.log(`✅ Exportados ${courses.length} cursos a ${filename}.xlsx`);
+    } catch (error) {
+      console.error('Error al exportar a Excel:', error);
+      alert('Ocurrió un error al exportar el archivo. Por favor, intenta nuevamente.');
+    }
+  }).catch((error) => {
+    console.error('Error al cargar la librería XLSX:', error);
+    alert('Error al cargar el módulo de exportación. Por favor, recarga la página.');
+  });
 }
 
