@@ -14,16 +14,13 @@ import {
   Award,
   Building2,
   Tag,
-  Download,
-  Share2,
-  Plus,
   Info,
   Target,
   FileCheck,
 } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
 import { Button } from '@/shared/components';
-import { getTeachingLevelLabel, getCourseTypeLabel, formatCredits } from '@/features/courses/utils';
+import { getTeachingLevelLabel, getCourseTypeLabel } from '@/features/courses/utils';
 
 export function CourseModal(): JSX.Element {
   const { modalState, closeModal } = useCourseContext();

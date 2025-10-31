@@ -8,13 +8,10 @@
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import type { Course, CourseFilters, CourseModalState } from '@/features/courses/types';
-import { filterCourses } from '@/features/courses/utils';
-import { MOCK_COURSES } from '@/data/mock-courses';
 import { searchCourses } from '@/features/courses/services';
 
 interface CourseContextValue {
   // Estado
-  allCourses: Course[];
   filteredCourses: Course[];
   filters: CourseFilters;
   modalState: CourseModalState;
@@ -47,7 +44,6 @@ interface CourseProviderProps {
 }
 
 export function CourseProvider({ children }: CourseProviderProps): React.JSX.Element {
-  const [allCourses] = useState<Course[]>(MOCK_COURSES);
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [filters, setFilters] = useState<CourseFilters>(INITIAL_FILTERS);
   const [modalState, setModalState] = useState<CourseModalState>({
@@ -86,23 +82,21 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
       // Usar los filtros proporcionados o los del estado
       const filtersToUse = searchFilters || filters;
       
-      // Usar la API real en lugar de datos mockeados
+      // Llamar a la API
       const results = await searchCourses(filtersToUse);
       setFilteredCourses(results);
       setIsSearchActive(true);
     } catch (err) {
       console.error('Error en performSearch:', err);
-      setError(err instanceof Error ? err.message : 'Error desconocido');
+      setError(err instanceof Error ? err.message : 'Error al buscar cursos. Por favor, intenta nuevamente.');
       
-      // Fallback a datos mockeados en caso de error
-      const filtersToUse = searchFilters || filters;
-      const fallbackResults = filterCourses(allCourses, filtersToUse);
-      setFilteredCourses(fallbackResults);
-      setIsSearchActive(true);
+      // Limpiar resultados en caso de error
+      setFilteredCourses([]);
+      setIsSearchActive(false);
     } finally {
       setIsLoading(false);
     }
-  }, [filters, allCourses]);
+  }, [filters]);
 
   /**
    * Abre el modal con la información del curso
@@ -140,7 +134,6 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
   }, []);
 
   const value: CourseContextValue = {
-    allCourses,
     filteredCourses,
     filters,
     modalState,

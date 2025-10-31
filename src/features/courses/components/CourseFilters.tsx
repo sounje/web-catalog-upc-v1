@@ -21,7 +21,7 @@ import { filterSchema, type FilterFormData } from '@/features/courses/validation
 import { getFaculties, getCareersByFaculty } from '@/features/courses/services';
 
 export function CourseFilters(): React.JSX.Element {
-  const { filters, updateFilters, performSearch, clearSearch, isLoading, error, clearError } = useCourseContext();
+  const { updateFilters, performSearch, clearSearch, isLoading, error, clearError } = useCourseContext();
 
   // Estado local para opciones dinámicas de facultades y carreras
   const [facultyOptions, setFacultyOptions] = useState<ApiFacultyResponse[]>([]);

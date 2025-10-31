@@ -34,8 +34,9 @@ export interface ApiCourseFilter {
 
 /**
  * Request completo para la API (sin wrapper "filter")
+ * Es un alias del ApiCourseFilter ya que tienen la misma estructura
  */
-export interface ApiCourseRequest extends ApiCourseFilter {}
+export type ApiCourseRequest = ApiCourseFilter;
 
 /**
  * Mapeo de niveles de enseñanza al formato de la API
@@ -62,12 +63,6 @@ export const COURSE_TYPE_MAPPING = {
   'obligatorio': 'Obligatorio',
   'electivo': 'Electivo',
 } as const;
-
-/**
- * IDs hardcodeados temporalmente para facultad y programa
- */
-export const TEMP_FACULTY_ID = '6C2BD140-10CB-47AD-AFDB-F69CEADD391D';
-export const TEMP_PROGRAM_ID = '167D3B55-3852-4C02-824D-05CAF812712D';
 
 /**
  * Respuesta de la API de Facultades

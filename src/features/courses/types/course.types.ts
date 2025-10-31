@@ -42,22 +42,6 @@ export interface CourseFilters {
 }
 
 /**
- * Opciones de facultad
- */
-export interface FacultyOption {
-  value: string;
-  label: string;
-}
-
-/**
- * Opciones de programa
- */
-export interface ProgramOption {
-  value: string;
-  label: string;
-}
-
-/**
  * Estado del modal de curso
  */
 export interface CourseModalState {

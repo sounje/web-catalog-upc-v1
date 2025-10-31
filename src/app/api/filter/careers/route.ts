@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         'Accept': 'application/json',
       },
       body: JSON.stringify(facultyId),
-      // @ts-ignore - Node.js fetch acepta agent pero TypeScript no lo reconoce
+      // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
