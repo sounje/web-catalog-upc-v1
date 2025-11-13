@@ -113,7 +113,7 @@ export function CourseModal(): JSX.Element {
                       <div className="bg-green-50 border-b border-green-200 px-4 py-2">
                         <h4 className="text-sm font-semibold text-green-900 flex items-center gap-2">
                           <Award className="h-4 w-4" />
-                          Créditos Académicos
+                          Créditos
                         </h4>
                       </div>
                       <div className="p-4">

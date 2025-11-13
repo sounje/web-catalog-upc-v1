@@ -8,7 +8,7 @@ import https from 'https';
 import type { ApiCareerResponse } from '@/features/courses/types';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216';
-const API_ENDPOINT_CBO_CARRERA_POR_FACULTAD = process.env.API_ENDPOINT_CBO_CARRERA_POR_FACULTAD || 'api/Filter/GetCareers';
+const API_ENDPOINT_CBO_CARRERA_POR_FACULTAD = process.env.API_ENDPOINT_CBO_CARRERA_POR_FACULTAD || 'Filter/GetCareers';
 const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CBO_CARRERA_POR_FACULTAD;
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
     
     console.log('📤 Solicitando carreras para facultad:', facultyId);
     console.log('🔗 Endpoint:', API_ENDPOINT);
-    
     // Validar que se proporcione el ID de la facultad
     if (!facultyId || typeof facultyId !== 'string') {
       return NextResponse.json(
@@ -34,7 +33,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    const objectBody = { "id": facultyId };
+    console.log('Pre envio:', objectBody);
     // Realizar la petición al backend
     const response = await fetch(API_ENDPOINT, {
       method: 'POST',
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify(facultyId),
+      body: JSON.stringify(objectBody),
       // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });

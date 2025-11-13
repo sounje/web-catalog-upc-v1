@@ -6,6 +6,7 @@
 import type { Course, CourseFilters, ApiFacultyResponse, ApiCareerResponse } from '@/features/courses/types';
 import type { ApiCourseRequest } from '@/features/courses/types';
 import { mapFiltersToApi, mapApiResponseToCourses } from '@/features/courses/mappers';
+import { fa } from 'zod/locales';
 
 /**
  * Realiza la búsqueda de cursos en la API
