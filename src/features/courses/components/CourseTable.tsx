@@ -44,14 +44,14 @@ export function CourseTable(): JSX.Element {
         cell: (info) => <span className="text-gray-900">{info.getValue() as string}</span>,
       },
       {
+        accessorKey: 'credits',
+        header: 'Créditos',
+        cell: (info) => <span className="text-gray-700">{info.getValue() as number}</span>,
+      },
+      {
         accessorKey: 'program',
         header: 'Programa',
         cell: (info) => <span className="text-gray-700">{info.getValue() as string}</span>,
-      },
-      {
-        accessorKey: 'credits',
-        header: 'Crédito',
-        cell: (info) => <span className="text-gray-700">{info.getValue() as number}</span>,
       },
       {
         accessorKey: 'faculty',

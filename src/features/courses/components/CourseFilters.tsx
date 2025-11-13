@@ -175,7 +175,7 @@ export function CourseFilters(): React.JSX.Element {
 
         {/* Facultad */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Facultad</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-3">Facultad<b style={{ color: 'red' }}>*</b></h3>
           <Select 
             {...register('faculty')} 
             options={[
@@ -191,7 +191,7 @@ export function CourseFilters(): React.JSX.Element {
 
         {/* Programa */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-3">Programa</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-3">Programa<b style={{ color: 'red' }}>*</b></h3>
           <Select 
             {...register('program')} 
             options={[
@@ -281,6 +281,8 @@ export function CourseFilters(): React.JSX.Element {
             Limpiar Filtros
           </Button>
         </div>
+        <hr className="border-gray-200" />
+        <legend className="text-xs text-gray-500"><b style={{ color: 'red' }}>*</b> Campos obligatorios</legend>
       </form>
     </div>
   );
