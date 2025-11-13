@@ -4,22 +4,29 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { ApiCourseRequest, ApiCourseResponse } from '@/features/courses/types';
+import https from 'https';
+import type { ApiCourseResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL ;
-const API_ENDPOINT = `${BACKEND_URL}api/curso/consultar-cursor`;
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216/';
+const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'api/CursosSearch/GetCursosBySearch';
+const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CONSULTA_CURSO;
+
+// Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 export async function POST(request: NextRequest) {
   try {
     // Obtener el body de la request
     const body = await request.json();
-    console.log(body);
-    console.log(API_ENDPOINT);
+    console.log('📤 Request enviado al backend:', JSON.stringify(body, null, 2));
+    console.log('🔗 Endpoint:', API_ENDPOINT);
     
-    // Validar que tenga la estructura correcta
-    if (!body.filter) {
+    // Validar que tenga los campos requeridos
+    if (!body.name && !body.facultad && !body.programa) {
       return NextResponse.json(
-        { error: 'Filtro requerido' },
+        { error: 'Al menos un filtro es requerido' },
         { status: 400 }
       );
     }
@@ -31,6 +38,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
+      // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
+      agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
     if (!response.ok) {

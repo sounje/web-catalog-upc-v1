@@ -4,7 +4,7 @@
  */
 
 // Tipos para respuestas de API genéricas
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -43,7 +43,7 @@ export interface LoadingState {
 }
 
 // Tipos para modales
-export interface ModalState<T = any> {
+export interface ModalState<T = unknown> {
   isOpen: boolean;
   data: T | null;
 }

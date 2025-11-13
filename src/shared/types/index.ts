@@ -65,13 +65,13 @@ export interface ModalProps extends BaseComponentProps {
 }
 
 // Props para tablas
-export interface TableProps<T = any> extends BaseComponentProps {
+export interface TableProps<T = Record<string, unknown>> extends BaseComponentProps {
   data: T[];
   columns: Array<{
     key: string;
     label: string;
     sortable?: boolean;
-    render?: (value: any, row: T) => React.ReactNode;
+    render?: (value: unknown, row: T) => React.ReactNode;
   }>;
   pagination?: {
     page: number;

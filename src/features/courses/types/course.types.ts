@@ -28,7 +28,7 @@ export type CourseType = 'obligatorio' | 'electivo';
 /**
  * Niveles de enseñanza
  */
-export type TeachingLevel = 'pregrado-tradicional' | 'pregrado-epe' | 'postgrado';
+export type TeachingLevel = 'pregrado-tradicional' | 'pregrado-epe' | 'maestria';
 
 /**
  * Filtros aplicables a la búsqueda de cursos
@@ -39,22 +39,6 @@ export interface CourseFilters {
   faculty: string;
   program: string;
   courseTypes: CourseType[];
-}
-
-/**
- * Opciones de facultad
- */
-export interface FacultyOption {
-  value: string;
-  label: string;
-}
-
-/**
- * Opciones de programa
- */
-export interface ProgramOption {
-  value: string;
-  label: string;
 }
 
 /**
@@ -80,6 +64,8 @@ export interface FormFieldProps {
 export type { 
   ApiCourseResponse, 
   ApiCourseFilter, 
-  ApiCourseRequest 
+  ApiCourseRequest,
+  ApiFacultyResponse,
+  ApiCareerResponse
 } from './api.types';
 

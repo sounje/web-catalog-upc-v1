@@ -14,16 +14,13 @@ import {
   Award,
   Building2,
   Tag,
-  Download,
-  Share2,
-  Plus,
   Info,
   Target,
   FileCheck,
 } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
 import { Button } from '@/shared/components';
-import { getTeachingLevelLabel, getCourseTypeLabel, formatCredits } from '@/features/courses/utils';
+import { getTeachingLevelLabel, getCourseTypeLabel } from '@/features/courses/utils';
 
 export function CourseModal(): JSX.Element {
   const { modalState, closeModal } = useCourseContext();
@@ -116,7 +113,7 @@ export function CourseModal(): JSX.Element {
                       <div className="bg-green-50 border-b border-green-200 px-4 py-2">
                         <h4 className="text-sm font-semibold text-green-900 flex items-center gap-2">
                           <Award className="h-4 w-4" />
-                          Créditos Académicos
+                          Créditos
                         </h4>
                       </div>
                       <div className="p-4">
