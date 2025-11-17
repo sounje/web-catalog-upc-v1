@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
       );
     }
     const objectBody = { "id": facultyId };
-    console.log('Pre envio:', objectBody);
     // Realizar la petición al backend
     const response = await fetch(API_ENDPOINT, {
       method: 'POST',
