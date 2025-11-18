@@ -20,7 +20,7 @@ export function PageHeader(): JSX.Element {
         </h1>
 
         {/* Imagen derecha */}
-        <div className="w-[60%] h-[60%] w-full md:w-1/3 flex justify-center md:justify-end relative h-full lg:min-h-[90px] aspect-[16/9] lg:h-10 lg:w-40 md:h-8 md:w-32 h-6 w-24">
+        <div className="w-[60%] h-[60%] w-full md:w-1/3 flex justify-center md:justify-end relative h-full md:min-h-[100px] aspect-[16/9] lg:h-10 lg:w-40 md:h-8 md:w-32 h-6 w-24">
           <Image
             src="/assets/logo_upc.png"
             alt="Logo UPC"
