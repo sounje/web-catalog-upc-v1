@@ -8,7 +8,7 @@ import https from 'https';
 import type { ApiCourseResponse } from '@/features/courses/types';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216/';
-const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'api/CursosSearch/GetCursosBySearch';
+const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'test/CursosSearch/GetCursosBySearch';
 const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CONSULTA_CURSO;
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)

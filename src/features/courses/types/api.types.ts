@@ -14,7 +14,7 @@ export interface ApiCourseResponse {
   career: string;
   credits: number;
   faculty: string;
-  type: string;
+  tipo: string;
   incoming: string;
   graduate: string;
   requirement: string;
