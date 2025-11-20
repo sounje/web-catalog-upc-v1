@@ -105,6 +105,15 @@ export function getTeachingLevelLabel(level: string): string {
   return labels[level] || level;
 }
 
+export function getNivelEnsenanzaLabel(nivel: string): string {
+  const labels: Record<string, string> = {
+    'UAC': 'Pregrado EPE',
+    'UFC': 'Pregrado Tradicional',
+    'EMA': 'Maestría',
+  };
+  return labels[nivel] || nivel;
+}
+
 /**
  * Obtiene el label del tipo de curso
  */

@@ -17,6 +17,7 @@ export interface Course {
   achievement?: string;
   prerequisites?: string;
   courseType: CourseType;
+  nivel: string;
   teachingLevel: TeachingLevel;
 }
 

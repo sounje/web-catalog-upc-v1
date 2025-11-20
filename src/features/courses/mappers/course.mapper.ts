@@ -73,6 +73,7 @@ export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
     description: apiCourse.incoming,
     achievement: apiCourse.graduate,
     prerequisites: apiCourse.requirement,
+    nivel: apiCourse.nivel,
     courseType: mapCourseTypeFromApi(apiCourse.tipo),
     teachingLevel: mapTeachingLevelFromApi(apiCourse.faculty),
   };
@@ -133,6 +134,7 @@ export function mapCourseToApi(course: Course): ApiCourseResponse {
     credits: course.credits,
     faculty: course.faculty,
     tipo: mapCourseTypeToApi(course.courseType),
+    nivel: course.nivel,
     incoming: course.description || 'N/A',
     graduate: course.achievement || 'N/A',
     requirement: course.prerequisites || 'N/A',
