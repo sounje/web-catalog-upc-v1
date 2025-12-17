@@ -52,8 +52,8 @@ export type ApiCourseRequest = ApiCourseFilter;
  * - UAC + UFC + EMA → "UAC-UFC-EMA"
  */
 export const TEACHING_LEVEL_MAPPING = {
-  'pregrado-epe': 'UAC',
-  'pregrado-tradicional': 'UFC',
+  'pregrado-epe': 'UFC',
+  'pregrado-tradicional': 'UAC',
   'maestria': 'EMA',
 } as const;
 

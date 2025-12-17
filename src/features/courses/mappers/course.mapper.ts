@@ -43,8 +43,8 @@ export function mapFiltersToApi(filters: CourseFilters): ApiCourseFilter {
  * - Ninguno → ""
  */
 function mapTeachingLevelsToApi(teachingLevels: string[]): string {
-  const hasUAC = teachingLevels.includes('pregrado-epe');
-  const hasUFC = teachingLevels.includes('pregrado-tradicional');
+  const hasUAC = teachingLevels.includes('pregrado-tradicional');
+  const hasUFC = teachingLevels.includes('pregrado-epe');
   const hasEMA = teachingLevels.includes('maestria');
   
   // Construir el string según las combinaciones seleccionadas
