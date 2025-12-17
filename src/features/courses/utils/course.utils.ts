@@ -107,8 +107,8 @@ export function getTeachingLevelLabel(level: string): string {
 
 export function getNivelEnsenanzaLabel(nivel: string): string {
   const labels: Record<string, string> = {
-    'UAC': 'Pregrado EPE',
-    'UFC': 'Pregrado Tradicional',
+    'UFC': 'Pregrado EPE',
+    'UAC': 'Pregrado Tradicional',
     'EMA': 'Maestría',
   };
   return labels[nivel] || nivel;
