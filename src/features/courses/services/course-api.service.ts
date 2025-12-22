@@ -3,7 +3,7 @@
  * Solo maneja la comunicación HTTP, el mapeo está separado
  */
 
-import type { Course, CourseFilters, ApiFacultyResponse, ApiCareerResponse } from '@/features/courses/types';
+import type { Course, CourseFilters, ApiFacultyResponse, ApiCareerResponse, ApiPeriodDetailsResponse } from '@/features/courses/types';
 import type { ApiCourseRequest } from '@/features/courses/types';
 import { mapFiltersToApi, mapApiResponseToCourses } from '@/features/courses/mappers';
 import { fa } from 'zod/locales';
@@ -141,5 +141,37 @@ export async function getCareersByFaculty(facultyId: string): Promise<ApiCareerR
   } catch (error) {
     console.error('Error en getCareersByFaculty:', error);
     return [];
+  }
+}
+
+/**
+ * Obtiene los detalles del periodo actual
+ * Usa el API Route local como intermediario
+ */
+export async function getPeriodDetails(): Promise<ApiPeriodDetailsResponse | null> {
+  try {
+    const response = await fetch('/api/period/details', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al obtener detalles del periodo: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      console.error('Error en la respuesta:', result.error);
+      return null;
+    }
+
+    return result.data || null;
+
+  } catch (error) {
+    console.error('Error en getPeriodDetails:', error);
+    return null;
   }
 }

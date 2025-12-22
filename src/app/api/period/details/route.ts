@@ -1,15 +1,18 @@
 /**
- * API Route para obtener listado de facultades
+ * API Route para obtener detalles del periodo
  * Oculta el endpoint real del cliente y maneja la comunicación con el backend
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
-import type { ApiFacultyResponse } from '@/features/courses/types';
+import type { ApiPeriodDetailsResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216';
-const API_ENDPOINT_CBO_FACULTADES = process.env.API_ENDPOINT_CBO_FACULTADES || 'api/Filter/GetFaculties';
-const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CBO_FACULTADES;
+//const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+const BACKEND_URL = 'http://localhost:8080';
+
+const API_ENDPOINT_PERIOD_DETAILS = process.env.API_ENDPOINT_PERIOD_DETAILS || 'dev/GetDetailsPeriod';
+// Asegurar que haya un solo / entre BACKEND_URL y el endpoint
+const API_ENDPOINT = `${BACKEND_URL.replace(/\/$/, '')}/${API_ENDPOINT_PERIOD_DETAILS}`;
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
@@ -18,7 +21,7 @@ const httpsAgent = new https.Agent({
 
 export async function GET() {
   try {
-    console.log('Solicitando facultades desde:', API_ENDPOINT);
+    console.log('Solicitando detalles del periodo desde:', API_ENDPOINT);
     
     // Realizar la petición al backend
     const response = await fetch(API_ENDPOINT, {
@@ -34,36 +37,38 @@ export async function GET() {
       throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    const data: ApiFacultyResponse[] | null = await response.json();
+    const data: ApiPeriodDetailsResponse | null = await response.json();
 
     // La API puede retornar null en caso de error
     if (data === null) {
       console.error('La API retornó null');
-      return NextResponse.json({
-        success: true,
-        data: [],
-        count: 0,
-      });
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'La API retornó null',
+          data: null
+        },
+        { status: 500 }
+      );
     }
 
-    console.log(`Facultades obtenidas: ${data.length}`);
+    console.log(`Detalles del periodo obtenidos: Semestre ${data.Semestre}, Año ${data.Fecha}`);
 
     // Retornar los datos al cliente
     return NextResponse.json({
       success: true,
       data,
-      count: data.length,
     });
 
   } catch (error) {
-    console.error('Error al obtener facultades:', error);
+    console.error('Error al obtener detalles del periodo:', error);
     
     return NextResponse.json(
       { 
         success: false,
-        error: 'Error al obtener facultades',
+        error: 'Error al obtener detalles del periodo',
         message: error instanceof Error ? error.message : 'Error desconocido',
-        data: []
+        data: null
       },
       { status: 500 }
     );

@@ -80,3 +80,11 @@ export interface ApiCareerResponse {
   id: string;
   name: string;
 }
+
+/**
+ * Respuesta de la API de Detalles del Periodo
+ */
+export interface ApiPeriodDetailsResponse {
+  Fecha: number;
+  Semestre: number;
+}

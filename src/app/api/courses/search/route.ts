@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
   try {
     // Obtener el body de la request
     const body = await request.json();
-    console.log('📤 Request enviado al backend:', JSON.stringify(body, null, 2));
-    console.log('🔗 Endpoint:', API_ENDPOINT);
+    console.log('Request enviado al backend:', JSON.stringify(body, null, 2));
+    console.log('Endpoint:', API_ENDPOINT);
     
     // Validar que tenga los campos requeridos
     if (!body.name && !body.facultad && !body.programa) {

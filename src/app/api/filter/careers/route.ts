@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
     // Obtener el body de la request (GUID de la facultad)
     const facultyId = await request.json();
     
-    console.log('📤 Solicitando carreras para facultad:', facultyId);
-    console.log('🔗 Endpoint:', API_ENDPOINT);
+    console.log('Solicitando carreras para facultad:', facultyId);
+    console.log('Endpoint:', API_ENDPOINT);
     // Validar que se proporcione el ID de la facultad
     if (!facultyId || typeof facultyId !== 'string') {
       return NextResponse.json(
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     // La API puede retornar null en caso de error
     if (data === null) {
-      console.error('❌ La API retornó null');
+      console.error('La API retornó null');
       return NextResponse.json({
         success: true,
         data: [],
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.log(`✅ Carreras obtenidas: ${data.length}`);
+    console.log(`Carreras obtenidas: ${data.length}`);
 
     // Retornar los datos al cliente
     return NextResponse.json({
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('❌ Error al obtener carreras:', error);
+    console.error('Error al obtener carreras:', error);
     
     return NextResponse.json(
       { 

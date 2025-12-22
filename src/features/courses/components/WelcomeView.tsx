@@ -4,9 +4,49 @@
  */
 
 import Image from 'next/image';
-import { JSX } from 'react';
+import { JSX, useEffect, useState } from 'react';
+import { getPeriodDetails } from '@/features/courses/services';
+import type { ApiPeriodDetailsResponse } from '@/features/courses/types';
 
 export function WelcomeView(): JSX.Element {
+  const [periodDetails, setPeriodDetails] = useState<ApiPeriodDetailsResponse | null>(null);
+  const [isLoadingPeriod, setIsLoadingPeriod] = useState(true);
+
+  /**
+   * Carga los detalles del periodo al montar el componente
+   */
+  useEffect(() => {
+    const loadPeriodDetails = async () => {
+      setIsLoadingPeriod(true);
+      try {
+        const details = await getPeriodDetails();
+        setPeriodDetails(details);
+      } catch (error) {
+        console.error('Error al cargar detalles del periodo:', error);
+      } finally {
+        setIsLoadingPeriod(false);
+      }
+    };
+
+    loadPeriodDetails();
+  }, []);
+
+  /**
+   * Formatea el texto de información actualizada
+   */
+  const getUpdatedInfoText = (): string => {
+    if (isLoadingPeriod) {
+      return 'Información actualizada...';
+    }
+    
+    if (periodDetails) {
+      return `Información actualizada al ${periodDetails.Semestre} semestre del ${periodDetails.Fecha}`;
+    }
+    
+    // Fallback si no se puede cargar la información
+    return 'Información actualizada';
+  };
+
   return (
     <div className="relative w-full h-full min-h-[600px] aspect-[16/9] rounded-lg overflow-hidden shadow-sm">
       {/* Imagen */}
@@ -29,7 +69,7 @@ export function WelcomeView(): JSX.Element {
         </p>
 
         <p className="text-xs md:text-sm italic text-white mt-4">
-          Información actualizada a Marzo 2026
+          {getUpdatedInfoText()}
         </p>
 
       </div>
