@@ -14,6 +14,7 @@ export function WelcomeView(): JSX.Element {
 
   /**
    * Carga los detalles del periodo al montar el componente
+   * Ultimos detalles del periodo (semestre y fecha de actualización)
    */
   useEffect(() => {
     const loadPeriodDetails = async () => {
