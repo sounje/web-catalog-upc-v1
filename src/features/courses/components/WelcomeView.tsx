@@ -32,6 +32,25 @@ export function WelcomeView(): JSX.Element {
     loadPeriodDetails();
   }, []);
 
+  //creamos una funcion que recibe el periodo numerico y devuelve el texto correspondiente
+  function getTextSemestre(period:number): string {
+      switch (period) {
+        case 1:
+          return 'primer semestre';
+        case 2:
+          return 'segundo semestre';
+        case 3:
+          return 'tercer trimestre';
+        case 4:
+          return 'cuarto cuatrimestre';
+        case 5:
+          return 'quinto quinquemestre';
+        case 6:
+          return 'sexto bimestre';
+        default:
+      return '';
+    }
+  }
   /**
    * Formatea el texto de información actualizada
    */
@@ -41,7 +60,8 @@ export function WelcomeView(): JSX.Element {
     }
     
     if (periodDetails) {
-      return `Información actualizada al ${periodDetails.Semestre} semestre del ${periodDetails.Fecha}`;
+      const semestreText = getTextSemestre(periodDetails.Semestre);
+      return `Información actualizada al ${semestreText} del ${periodDetails.Fecha}`;
     }
     
     // Fallback si no se puede cargar la información
