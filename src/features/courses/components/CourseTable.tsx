@@ -17,7 +17,7 @@ import {
   type ColumnDef,
   type SortingState,
 } from '@tanstack/react-table';
-import { ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react';
+import { ChevronUp, ChevronDown, Download } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
 import type { Course } from '@/features/courses/types';
 import { Button } from '@/shared/components';
@@ -81,6 +81,33 @@ export function CourseTable(): JSX.Element {
   });
 
   /**
+   * Handler para ordenamiento por columna
+   */
+  const handleSort = (columnId: string): void => {
+    const currentSort = sorting.find(s => s.id === columnId);
+    
+    if (!currentSort) {
+      // No está ordenado, ordenar ascendente
+      setSorting([{ id: columnId, desc: false }]);
+    } else if (!currentSort.desc) {
+      // Está ascendente, cambiar a descendente
+      setSorting([{ id: columnId, desc: true }]);
+    } else {
+      // Está descendente, quitar ordenamiento
+      setSorting([]);
+    }
+  };
+
+  /**
+   * Obtener el estado de ordenamiento de una columna
+   */
+  const getSortState = (columnId: string): 'asc' | 'desc' | null => {
+    const currentSort = sorting.find(s => s.id === columnId);
+    if (!currentSort) return null;
+    return currentSort.desc ? 'desc' : 'asc';
+  };
+
+  /**
    * Handler para click en fila
    */
   const handleRowClick = (course: Course): void => {
@@ -127,6 +154,47 @@ export function CourseTable(): JSX.Element {
         </button>
       </div>
 
+      {/* Botones de Ordenamiento */}
+      <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <p className="text-sm font-medium text-gray-700 mb-3">Ordenar por:</p>
+        <div className="flex flex-wrap gap-2">
+          {columns.map((column) => {
+            // Type guard: verificar que la columna tenga accessorKey
+            if (!('accessorKey' in column)) return null;
+            const columnId = column.accessorKey as string;
+            const sortState = getSortState(columnId);
+            const isActive = sortState !== null;
+            
+            return (
+              <button
+                key={columnId}
+                onClick={() => handleSort(columnId)}
+                className={
+                  `inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium
+                  transition-all duration-200 border
+                  ${isActive 
+                    ? 'bg-red-600 text-white border-red-600 shadow-sm hover:bg-red-700' 
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                  }`
+                }
+              >
+                {column.header as string}
+                {sortState === 'asc' && <ChevronUp className="h-4 w-4" />}
+                {sortState === 'desc' && <ChevronDown className="h-4 w-4" />}
+              </button>
+            );
+          })}
+        </div>
+        {sorting.length > 0 && (
+          <button
+            onClick={() => setSorting([])}
+            className="mt-3 text-sm text-red-600 hover:text-red-700 font-medium"
+          >
+            Limpiar ordenamiento
+          </button>
+        )}
+      </div>
+
       {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-200">
@@ -139,26 +207,8 @@ export function CourseTable(): JSX.Element {
                     className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200"
                   >
                     {header.isPlaceholder ? null : (
-                      <div
-                        className={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none flex items-center gap-2 hover:text-gray-900'
-                            : ''
-                        }
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
+                      <div>
                         {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort() && (
-                          <span className="text-gray-400">
-                            {header.column.getIsSorted() === 'asc' ? (
-                              <ChevronUp className="h-4 w-4" />
-                            ) : header.column.getIsSorted() === 'desc' ? (
-                              <ChevronDown className="h-4 w-4" />
-                            ) : (
-                              <ChevronsUpDown className="h-4 w-4" />
-                            )}
-                          </span>
-                        )}
                       </div>
                     )}
                   </th>
