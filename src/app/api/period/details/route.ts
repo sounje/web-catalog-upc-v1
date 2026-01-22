@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiPeriodDetailsResponse } from '@/features/courses/types';
 
-//const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
-const BACKEND_URL = 'http://localhost:8080';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+//const BACKEND_URL = 'http://localhost:8080';
 
 const API_ENDPOINT_PERIOD_DETAILS = process.env.API_ENDPOINT_PERIOD_DETAILS || 'dev/GetDetailsPeriod';
 // Asegurar que haya un solo / entre BACKEND_URL y el endpoint
