@@ -8,11 +8,12 @@ import https from 'https';
 import type { ApiPeriodDetailsResponse } from '@/features/courses/types';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
-//const BACKEND_URL = 'http://localhost:8080';
+
+const BACKEND_URL_DEV = process.env.BACKEND_URL_DEV || 'http://localhost:8080';
 
 const API_ENDPOINT_PERIOD_DETAILS = process.env.API_ENDPOINT_PERIOD_DETAILS || 'dev/GetDetailsPeriod';
 // Asegurar que haya un solo / entre BACKEND_URL y el endpoint
-const API_ENDPOINT = `${BACKEND_URL.replace(/\/$/, '')}/${API_ENDPOINT_PERIOD_DETAILS}`;
+const API_ENDPOINT = `${BACKEND_URL_DEV.replace(/\/$/, '')}/${API_ENDPOINT_PERIOD_DETAILS}`;
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
