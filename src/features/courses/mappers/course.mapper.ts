@@ -70,6 +70,7 @@ export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
     program: apiCourse.career,
     credits: apiCourse.credits,
     faculty: apiCourse.faculty,
+    direction: apiCourse.direction,
     description: apiCourse.incoming,
     achievement: apiCourse.graduate,
     prerequisites: apiCourse.requirement,
@@ -138,6 +139,7 @@ export function mapCourseToApi(course: Course): ApiCourseResponse {
     incoming: course.description || 'N/A',
     graduate: course.achievement || 'N/A',
     requirement: course.prerequisites || 'N/A',
+    direction: course.direction,
   };
 }
 

@@ -13,6 +13,7 @@ export interface Course {
   program: string;
   credits: number;
   faculty: string;
+  direction: string;
   description?: string;
   achievement?: string;
   prerequisites?: string;

@@ -17,12 +17,33 @@ import {
   type ColumnDef,
   type SortingState,
 } from '@tanstack/react-table';
-import { ChevronUp, ChevronDown, Download } from 'lucide-react';
+import { ChevronUp, ChevronDown, Download, RotateCcw } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
 import type { Course } from '@/features/courses/types';
 import { Button } from '@/shared/components';
 import { exportToCSV } from '@/features/courses/utils';
 import { TABLE_PAGINATION_CONFIG, MESSAGES } from '@/features/courses/constants';
+import type { Row } from '@tanstack/react-table';
+
+/**
+ * Función de ordenamiento personalizada para texto en español
+ * Usa Intl.Collator para ordenar correctamente caracteres con tildes
+ * Las letras con tildes se ordenan junto con sus equivalentes sin tilde
+ */
+function spanishSortingFn<T>(rowA: Row<T>, rowB: Row<T>, columnId: string): number {
+  const a = String(rowA.getValue(columnId) || '').toUpperCase();
+  const b = String(rowB.getValue(columnId) || '').toUpperCase();
+  
+  // Usar Intl.Collator con locale español para ordenamiento correcto
+  // sensitivity: 'base' ignora diferencias de mayúsculas/minúsculas y acentos
+  // numeric: true ordena números correctamente (ej: "2" antes de "10")
+  const collator = new Intl.Collator('es', {
+    sensitivity: 'base',
+    numeric: true,
+  });
+  
+  return collator.compare(a, b);
+}
 
 export function CourseTable(): JSX.Element {
   const { filteredCourses, openModal, isLoading, error } = useCourseContext();
@@ -37,26 +58,31 @@ export function CourseTable(): JSX.Element {
         accessorKey: 'code',
         header: 'Cod Curso',
         cell: (info) => <span className="font-medium text-gray-900">{info.getValue() as string}</span>,
+        sortingFn: spanishSortingFn,
       },
       {
         accessorKey: 'name',
         header: 'Curso',
         cell: (info) => <span className="text-gray-900">{info.getValue() as string}</span>,
+        sortingFn: spanishSortingFn,
       },
       {
         accessorKey: 'credits',
         header: 'Créditos',
         cell: (info) => <span className="text-gray-700">{info.getValue() as number}</span>,
+        // Mantener ordenamiento numérico por defecto para créditos
       },
       {
         accessorKey: 'program',
         header: 'Programa',
         cell: (info) => <span className="text-gray-700">{info.getValue() as string}</span>,
+        sortingFn: spanishSortingFn,
       },
       {
         accessorKey: 'faculty',
         header: 'Facultad',
         cell: (info) => <span className="text-gray-700">{info.getValue() as string}</span>,
+        sortingFn: spanishSortingFn,
       },
     ],
     []
@@ -156,8 +182,8 @@ export function CourseTable(): JSX.Element {
 
       {/* Botones de Ordenamiento */}
       <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-sm font-medium text-gray-700 mb-3">Ordenar por:</p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-sm font-medium text-gray-700">Ordenar por:</p>
           {columns.map((column) => {
             // Type guard: verificar que la columna tenga accessorKey
             if (!('accessorKey' in column)) return null;
@@ -184,15 +210,18 @@ export function CourseTable(): JSX.Element {
               </button>
             );
           })}
+          {sorting.length > 0 && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => setSorting([])}
+              icon={<RotateCcw className="h-4 w-4" />}
+            >
+              Limpiar ordenamiento
+            </Button>
+          )}
         </div>
-        {sorting.length > 0 && (
-          <button
-            onClick={() => setSorting([])}
-            className="mt-3 text-sm text-red-600 hover:text-red-700 font-medium"
-          >
-            Limpiar ordenamiento
-          </button>
-        )}
       </div>
 
       {/* Tabla */}

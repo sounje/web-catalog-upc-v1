@@ -7,9 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiFacultyResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216';
-const API_ENDPOINT_CBO_FACULTADES = process.env.API_ENDPOINT_CBO_FACULTADES || 'api/Filter/GetFaculties';
-const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CBO_FACULTADES;
+// API_ENDPOINT_CBO_FACULTADES ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_CBO_FACULTADES || 'http://localhost:5216/api/Filter/GetFaculties';
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({

@@ -7,9 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiCourseResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216/';
-const API_ENDPOINT_CONSULTA_CURSO = process.env.API_ENDPOINT_CONSULTA_CURSO || 'test/CursosSearch/GetCursosBySearch';
-const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CONSULTA_CURSO;
+// API_ENDPOINT_CONSULTA_CURSO ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_CONSULTA_CURSO || 'http://localhost:5216/test/CursosSearch/GetCursosBySearch';
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({

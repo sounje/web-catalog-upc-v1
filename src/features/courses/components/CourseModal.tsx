@@ -127,16 +127,16 @@ export function CourseModal(): JSX.Element {
                       </div>
                     </div>
 
-                    {/* Facultad */}
+                    {/* Dirección académica */}
                     <div className="border border-yellow-200 rounded-lg overflow-hidden">
                       <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2">
                         <h4 className="text-sm font-semibold text-yellow-900 flex items-center gap-2">
                           <Building2 className="h-4 w-4" />
-                          Facultad
+                          Dirección académica
                         </h4>
                       </div>
                       <div className="p-4">
-                        <p className="text-lg font-medium text-gray-900">{course.faculty}</p>
+                        <p className="text-lg font-medium text-gray-900">{course.direction}</p>
                         <p className="text-sm text-gray-500 mt-1">Unidad académica responsable</p>
                       </div>
                     </div>

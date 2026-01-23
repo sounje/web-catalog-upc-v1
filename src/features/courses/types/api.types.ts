@@ -18,7 +18,8 @@ export interface ApiCourseResponse {
   incoming: string;
   graduate: string;
   requirement: string;
-  nivel:string;
+  nivel: string;
+  direction: string;
 }
 
 /**

@@ -7,9 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiCareerResponse } from '@/features/courses/types';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5216';
-const API_ENDPOINT_CBO_CARRERA_POR_FACULTAD = process.env.API_ENDPOINT_CBO_CARRERA_POR_FACULTAD || 'Filter/GetCareers';
-const API_ENDPOINT = BACKEND_URL + API_ENDPOINT_CBO_CARRERA_POR_FACULTAD;
+// API_ENDPOINT_CBO_CARRERA_POR_FACULTAD ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_CBO_CARRERA_POR_FACULTAD || 'http://localhost:5216/Filter/GetCareers';
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false

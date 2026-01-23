@@ -94,15 +94,6 @@ export function CourseFilters(): React.JSX.Element {
   }, [watchedFaculty, setValue]);
 
   /**
-   * Selecciona automáticamente el primer tipo de curso al cargar el componente
-   */
-  useEffect(() => {
-    if (watchedCourseTypes.length === 0) {
-      setValue('courseTypes', [COURSE_TYPE_OPTIONS[0].value]);
-    }
-  }, [setValue, watchedCourseTypes.length]);
-
-  /**
    * Handler para submit del formulario
    */
   const onSubmit = async (data: FilterFormData): Promise<void> => {
@@ -136,10 +127,18 @@ export function CourseFilters(): React.JSX.Element {
   };
 
   /**
-   * Handler para cambios en radio buttons de tipos de curso
+   * Handler para cambios en tipos de curso (permite deseleccionar)
+   * Permite seleccionar una opción o ninguna, pero no ambas
    */
   const handleCourseTypeChange = (value: CourseType): void => {
-    setValue('courseTypes', [value]);
+    const current = watchedCourseTypes;
+    // Si el valor ya está seleccionado, deseleccionarlo (permitir ninguna opción)
+    if (current.includes(value)) {
+      setValue('courseTypes', []);
+    } else {
+      // Si no está seleccionado, seleccionar solo este valor
+      setValue('courseTypes', [value]);
+    }
   };
 
   return (
