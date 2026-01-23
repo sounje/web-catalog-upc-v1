@@ -26,7 +26,7 @@ import { TABLE_PAGINATION_CONFIG, MESSAGES } from '@/features/courses/constants'
 import type { Row } from '@tanstack/react-table';
 
 /**
- * Lista de cursos con ordenamiento en español
+ * Lista de cursos con ordenamiento en español - realizamos commit para pase a produccion
  * Función de ordenamiento personalizada para texto en español
  * Usa Intl.Collator para ordenar correctamente caracteres con tildes
  * Las letras con tildes se ordenan junto con sus equivalentes sin tilde
