@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
       const errorData = await response.text();
       console.error('Error Cognito token exchange:', response.status, errorData);
       localStorage.setItem('cognito_error', `Status: ${response.status}, Response: ${errorData}`);
-      return NextResponse.redirect(authRedirectUnauthorized);
+      return null;//NextResponse.redirect(authRedirectUnauthorized);
     }
 
     const tokens: CognitoTokenResponse = await response.json();
@@ -90,6 +90,6 @@ export async function GET(request: NextRequest) {
     return redirectResponse;
   } catch (error) {
     console.error('Error en intercambio de tokens:', error);
-    return NextResponse.redirect(authRedirectUnauthorized);
+    return null;//NextResponse.redirect(authRedirectUnauthorized);
   }
 }
