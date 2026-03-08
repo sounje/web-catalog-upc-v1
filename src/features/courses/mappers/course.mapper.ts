@@ -1,7 +1,6 @@
 /**
  * Mapper para convertir datos entre la API y los tipos internos
  * Siguiendo principios de Single Responsibility y Clean Code
- *  prueba
  */
 
 import type { Course, CourseFilters } from '@/features/courses/types';
