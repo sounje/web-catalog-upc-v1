@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Error Cognito token exchange:', response.status, errorData);
+      localStorage.setItem('cognito_error', `Status: ${response.status}, Response: ${errorData}`);
       return NextResponse.redirect(authRedirectUnauthorized);
     }
 
