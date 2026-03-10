@@ -1,20 +1,9 @@
 /**
- * API Route para intercambio de código OAuth por tokens de Cognito
- * Recibe el code de la URL, lo intercambia con Cognito y guarda los tokens en cookie
+ * API Route para validar e intercambiar código OAuth por tokens de Cognito
+ * Solo valida y registra resultado/errores en consola (sin redirecciones ni cookies)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-
-const COOKIE_NAME = 'cognito_session';
-const COOKIE_MAX_AGE = 60 * 60 * 24; // 24 horas
-
-interface CognitoTokenResponse {
-  access_token: string;
-  id_token: string;
-  refresh_token?: string;
-  expires_in: number;
-  token_type: string;
-}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -24,16 +13,22 @@ export async function GET(request: NextRequest) {
   const clientId = process.env.COGNITO_CLIENT_ID;
   const redirectUri = process.env.COGNITO_REDIRECT_URI;
   const clientSecret = process.env.COGNITO_CLIENT_SECRET;
-  const authRedirectUnauthorized =
-    process.env.AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
 
   if (!code) {
-    return NextResponse.redirect(authRedirectUnauthorized);
+    console.error('[Auth Callback] No se recibió el parámetro code en la URL');
+    return NextResponse.json({ ok: false, error: 'No code provided' }, { status: 400 });
   }
 
   if (!cognitoDomain || !clientId || !redirectUri) {
-    console.error('Configuración Cognito incompleta');
-    return NextResponse.redirect(authRedirectUnauthorized);
+    console.error('[Auth Callback] Configuración Cognito incompleta:', {
+      cognitoDomain: !!cognitoDomain,
+      clientId: !!clientId,
+      redirectUri: !!redirectUri,
+    });
+    return NextResponse.json(
+      { ok: false, error: 'Configuración Cognito incompleta' },
+      { status: 500 }
+    );
   }
 
   const tokenUrl = `${cognitoDomain}/oauth2/token`;
@@ -50,6 +45,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    console.log('[Auth Callback] Intercambiando código por tokens...', {
+      redirect_uri: redirectUri,
+      token_url: tokenUrl,
+    });
+
     const response = await fetch(tokenUrl, {
       method: 'POST',
       headers: {
@@ -58,37 +58,33 @@ export async function GET(request: NextRequest) {
       body: body.toString(),
     });
 
+    const responseText = await response.text();
+
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Error Cognito token exchange:', response.status, errorData);
-      return NextResponse.redirect(authRedirectUnauthorized);
+      console.error('[Auth Callback] Error Cognito:', response.status, responseText);
+      return NextResponse.json(
+        { ok: false, error: 'Token exchange failed', details: responseText },
+        { status: response.status }
+      );
     }
 
-    const tokens: CognitoTokenResponse = await response.json();
-
-    const sessionData = JSON.stringify({
-      access_token: tokens.access_token,
-      id_token: tokens.id_token,
-      refresh_token: tokens.refresh_token,
+    const tokens = JSON.parse(responseText);
+    console.log('[Auth Callback] Éxito. Tokens recibidos:', {
+      has_access_token: !!tokens.access_token,
+      has_id_token: !!tokens.id_token,
+      has_refresh_token: !!tokens.refresh_token,
       expires_in: tokens.expires_in,
     });
-    const cookieValue = Buffer.from(sessionData, 'utf-8').toString('base64');
 
-    const isProduction = process.env.NODE_ENV === 'production';
-    const baseUrl = request.nextUrl.origin;
-    const redirectResponse = NextResponse.redirect(new URL('/', baseUrl), 302);
-
-    redirectResponse.cookies.set(COOKIE_NAME, cookieValue, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      maxAge: COOKIE_MAX_AGE,
-      path: '/',
-    });
-
-    return redirectResponse;
+    return NextResponse.json({ ok: true, message: 'Validación exitosa. Ver consola del servidor.' });
   } catch (error) {
-    console.error('Error en intercambio de tokens:', error);
-    return NextResponse.redirect(authRedirectUnauthorized);
+    console.error('[Auth Callback] Error en intercambio de tokens:', error);
+    return NextResponse.json(
+      {
+        ok: false,
+        error: error instanceof Error ? error.message : 'Error desconocido',
+      },
+      { status: 500 }
+    );
   }
 }
