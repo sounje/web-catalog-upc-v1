@@ -59,34 +59,56 @@ function mapTeachingLevelsToApi(teachingLevels: string[]): string {
 }
 
 /**
- * Mapea la respuesta de la API al formato interno
- * Actualizado según nueva estructura del backend
+ * Normaliza la respuesta cruda de la API (camelCase o PascalCase) a ApiCourseResponse.
+ * Centraliza el manejo de convenciones de la API externa.
  */
-export function mapApiResponseToCourse(apiCourse: ApiCourseResponse & Record<string, unknown>): Course {
-  const tipo = apiCourse.tipo ?? apiCourse.Tipo;
-  const faculty = apiCourse.faculty ?? apiCourse.Faculty;
+function normalizeApiCourse(raw: Record<string, unknown>): ApiCourseResponse {
   return {
-    id: String(apiCourse.id ?? apiCourse.Id ?? ''),
-    code: String(apiCourse.code ?? apiCourse.Code ?? ''),
-    name: String(apiCourse.course ?? apiCourse.Course ?? ''),
-    program: String(apiCourse.career ?? apiCourse.Career ?? ''),
-    credits: Number(apiCourse.credits ?? apiCourse.Credits ?? 0),
-    faculty: String(faculty ?? ''),
-    direction: String(apiCourse.direction ?? apiCourse.Direction ?? ''),
-    description: String(apiCourse.incoming ?? apiCourse.Incoming ?? ''),
-    achievement: String(apiCourse.graduate ?? apiCourse.Graduate ?? ''),
-    prerequisites: String(apiCourse.requirement ?? apiCourse.Requirement ?? ''),
-    nivel: String(apiCourse.nivel ?? apiCourse.Nivel ?? ''),
-    courseType: mapCourseTypeFromApi(tipo),
-    teachingLevel: mapTeachingLevelFromApi(faculty),
+    id: String(raw.id ?? raw.Id ?? ''),
+    code: String(raw.code ?? raw.Code ?? ''),
+    course: String(raw.course ?? raw.Course ?? ''),
+    career: String(raw.career ?? raw.Career ?? ''),
+    credits: Number(raw.credits ?? raw.Credits ?? 0),
+    faculty: String(raw.faculty ?? raw.Faculty ?? ''),
+    tipo: String(raw.tipo ?? raw.Tipo ?? ''),
+    incoming: String(raw.incoming ?? raw.Incoming ?? ''),
+    graduate: String(raw.graduate ?? raw.Graduate ?? ''),
+    requirement: String(raw.requirement ?? raw.Requirement ?? ''),
+    nivel: String(raw.nivel ?? raw.Nivel ?? ''),
+    direction: String(raw.direction ?? raw.Direction ?? ''),
   };
 }
 
 /**
- * Mapea múltiples respuestas de la API
+ * Mapea la respuesta de la API al formato interno
  */
-export function mapApiResponseToCourses(apiCourses: ApiCourseResponse[]): Course[] {
-  return apiCourses.map(mapApiResponseToCourse);
+export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
+  return {
+    id: apiCourse.id,
+    code: apiCourse.code,
+    name: apiCourse.course,
+    program: apiCourse.career,
+    credits: apiCourse.credits,
+    faculty: apiCourse.faculty,
+    direction: apiCourse.direction,
+    description: apiCourse.incoming,
+    achievement: apiCourse.graduate,
+    prerequisites: apiCourse.requirement,
+    nivel: apiCourse.nivel,
+    courseType: mapCourseTypeFromApi(apiCourse.tipo),
+    teachingLevel: mapTeachingLevelFromApi(apiCourse.faculty),
+  };
+}
+
+/**
+ * Mapea múltiples respuestas de la API (acepta camelCase o PascalCase).
+ * Normaliza primero, luego mapea; evita hacks de tipos.
+ */
+export function mapApiResponseToCourses(apiCourses: unknown[]): Course[] {
+  const items = Array.isArray(apiCourses) ? apiCourses : [];
+  return items.map((raw) =>
+    mapApiResponseToCourse(normalizeApiCourse((raw ?? {}) as Record<string, unknown>))
+  );
 }
 
 /**
