@@ -62,21 +62,23 @@ function mapTeachingLevelsToApi(teachingLevels: string[]): string {
  * Mapea la respuesta de la API al formato interno
  * Actualizado según nueva estructura del backend
  */
-export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
+export function mapApiResponseToCourse(apiCourse: ApiCourseResponse & Record<string, unknown>): Course {
+  const tipo = apiCourse.tipo ?? apiCourse.Tipo;
+  const faculty = apiCourse.faculty ?? apiCourse.Faculty;
   return {
-    id: apiCourse.id, // Ahora la API proporciona el ID directamente
-    code: apiCourse.code,
-    name: apiCourse.course,
-    program: apiCourse.career,
-    credits: apiCourse.credits,
-    faculty: apiCourse.faculty,
-    direction: apiCourse.direction,
-    description: apiCourse.incoming,
-    achievement: apiCourse.graduate,
-    prerequisites: apiCourse.requirement,
-    nivel: apiCourse.nivel,
-    courseType: mapCourseTypeFromApi(apiCourse.tipo),
-    teachingLevel: mapTeachingLevelFromApi(apiCourse.faculty),
+    id: String(apiCourse.id ?? apiCourse.Id ?? ''),
+    code: String(apiCourse.code ?? apiCourse.Code ?? ''),
+    name: String(apiCourse.course ?? apiCourse.Course ?? ''),
+    program: String(apiCourse.career ?? apiCourse.Career ?? ''),
+    credits: Number(apiCourse.credits ?? apiCourse.Credits ?? 0),
+    faculty: String(faculty ?? ''),
+    direction: String(apiCourse.direction ?? apiCourse.Direction ?? ''),
+    description: String(apiCourse.incoming ?? apiCourse.Incoming ?? ''),
+    achievement: String(apiCourse.graduate ?? apiCourse.Graduate ?? ''),
+    prerequisites: String(apiCourse.requirement ?? apiCourse.Requirement ?? ''),
+    nivel: String(apiCourse.nivel ?? apiCourse.Nivel ?? ''),
+    courseType: mapCourseTypeFromApi(tipo),
+    teachingLevel: mapTeachingLevelFromApi(faculty),
   };
 }
 
@@ -89,9 +91,12 @@ export function mapApiResponseToCourses(apiCourses: ApiCourseResponse[]): Course
 
 /**
  * Mapea el tipo de curso de la API al tipo interno
- * Actualizado para soportar mayúsculas
+ * Soporta mayúsculas y valores undefined/null
  */
-function mapCourseTypeFromApi(apiType: string): 'obligatorio' | 'electivo' {
+function mapCourseTypeFromApi(apiType: string | undefined | null): 'obligatorio' | 'electivo' {
+  if (apiType == null || typeof apiType !== 'string') {
+    return 'obligatorio';
+  }
   const normalizedType = apiType.toUpperCase();
   
   const mapping: Record<string, 'obligatorio' | 'electivo'> = {
@@ -106,15 +111,16 @@ function mapCourseTypeFromApi(apiType: string): 'obligatorio' | 'electivo' {
  * Mapea el nivel de enseñanza basado en la facultad
  * (Esto es una aproximación, idealmente la API debería devolver el nivel)
  */
-function mapTeachingLevelFromApi(facultyName: string): 'pregrado-tradicional' | 'pregrado-epe' | 'maestria' {
+function mapTeachingLevelFromApi(facultyName: string | undefined | null): 'pregrado-tradicional' | 'pregrado-epe' | 'maestria' {
+  const name = (facultyName ?? '').toString();
   // Lógica simple basada en el nombre de la facultad
-  if (facultyName.toLowerCase().includes('postgrado') || 
-      facultyName.toLowerCase().includes('maestría') || 
-      facultyName.toLowerCase().includes('maestria')) {
+  if (name.toLowerCase().includes('postgrado') || 
+      name.toLowerCase().includes('maestría') || 
+      name.toLowerCase().includes('maestria')) {
     return 'maestria';
   }
   
-  if (facultyName.toLowerCase().includes('epe')) {
+  if (name.toLowerCase().includes('epe')) {
     return 'pregrado-epe';
   }
   

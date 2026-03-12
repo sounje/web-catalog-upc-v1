@@ -33,10 +33,13 @@ export async function GET() {
       throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    const data: ApiFacultyResponse[] | null = await response.json();
+    const rawData = await response.json();
+
+    // Log del response para debugging
+    console.log('API_ENDPOINT_CBO_FACULTADES - Response:', JSON.stringify(rawData, null, 2));
 
     // La API puede retornar null en caso de error
-    if (data === null) {
+    if (rawData === null) {
       console.error('La API retornó null');
       return NextResponse.json({
         success: true,
@@ -44,6 +47,13 @@ export async function GET() {
         count: 0,
       });
     }
+
+    // La API AWS retorna Id/Name (PascalCase), normalizar a id/name (camelCase) para el frontend
+    const isArray = Array.isArray(rawData);
+    const data: ApiFacultyResponse[] = (isArray ? rawData : []).map((item: { Id?: string; id?: string; Name?: string; name?: string }) => ({
+      id: item.id ?? item.Id ?? '',
+      name: item.name ?? item.Name ?? '',
+    }));
 
     console.log(`Facultades obtenidas: ${data.length}`);
 

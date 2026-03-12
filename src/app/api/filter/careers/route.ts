@@ -19,8 +19,6 @@ export async function POST(request: NextRequest) {
     // Obtener el body de la request (GUID de la facultad)
     const facultyId = await request.json();
     
-    console.log('Solicitando carreras para facultad:', facultyId);
-    console.log('Endpoint:', API_ENDPOINT);
     // Validar que se proporcione el ID de la facultad
     if (!facultyId || typeof facultyId !== 'string') {
       return NextResponse.json(
@@ -32,15 +30,21 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const objectBody = { "id": facultyId };
-    // Realizar la petición al backend
-    const response = await fetch(API_ENDPOINT, {
-      method: 'POST',
+    const urlWithParam = `${API_ENDPOINT.replace(/\/$/, '')}/${facultyId}`;
+
+    // Log del request enviado a API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
+    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
+    console.log('URL:', urlWithParam);
+    console.log('Method: GET');
+    console.log('Param (path):', facultyId);
+    console.log('----------------------------------------');
+
+    // Realizar la petición al backend (id como path param)
+    const response = await fetch(urlWithParam, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify(objectBody),
       // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
@@ -49,10 +53,10 @@ export async function POST(request: NextRequest) {
       throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    const data: ApiCareerResponse[] | null = await response.json();
+    const rawData = await response.json();
 
     // La API puede retornar null en caso de error
-    if (data === null) {
+    if (rawData === null) {
       console.error('La API retornó null');
       return NextResponse.json({
         success: true,
@@ -60,6 +64,13 @@ export async function POST(request: NextRequest) {
         count: 0,
       });
     }
+
+    // La API AWS retorna Id/Name (PascalCase), normalizar a id/name (camelCase) para el frontend
+    const isArray = Array.isArray(rawData);
+    const data: ApiCareerResponse[] = (isArray ? rawData : []).map((item: { Id?: string; id?: string; Name?: string; name?: string }) => ({
+      id: item.id ?? item.Id ?? '',
+      name: item.name ?? item.Name ?? '',
+    }));
 
     console.log(`Carreras obtenidas: ${data.length}`);
 
