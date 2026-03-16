@@ -3,24 +3,30 @@
 /**
  * Componente PageHeader
  * Banner con título del catálogo de cursos UPC y botón Cerrar sesión
+ * Obtiene el usuario desde la sesión (cookie) vía /api/auth/me
  */
 
 import Image from "next/image";
-import { useAuth } from "react-oidc-context";
+import { useEffect, useState } from "react";
 import { JSX } from "react";
 
+interface AuthUser {
+  authenticated: boolean;
+  email?: string;
+}
+
 export function PageHeader(): JSX.Element {
-  const auth = useAuth();
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => (res.ok ? res.json() : { authenticated: false }))
+      .then(setUser)
+      .catch(() => setUser({ authenticated: false }));
+  }, []);
 
   const handleSignOut = () => {
-    const clientId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
-    const logoutUri = process.env.NEXT_PUBLIC_COGNITO_LOGOUT_URI;
-    const cognitoDomain = process.env.NEXT_PUBLIC_COGNITO_DOMAIN;
-    if (clientId && logoutUri && cognitoDomain) {
-      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-    } else {
-      auth.removeUser();
-    }
+    window.location.href = '/api/auth/logout';
   };
 
   return (
@@ -45,10 +51,10 @@ export function PageHeader(): JSX.Element {
               className="object-contain"
             />
           </div>
-          {auth.isAuthenticated && (
+          {user?.authenticated && user?.email && (
             <div className="flex items-center gap-2">
               <span className="text-white/90 text-sm truncate max-w-[120px]">
-                {auth.user?.profile?.email}
+                {user.email}
               </span>
               <button
                 type="button"
@@ -64,4 +70,3 @@ export function PageHeader(): JSX.Element {
     </div>
   );
 }
-
