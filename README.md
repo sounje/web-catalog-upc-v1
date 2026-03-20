@@ -150,18 +150,18 @@ Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variabl
 BACKEND_URL=http://localhost:5216
 
 # Endpoint para consulta de cursos (relativo a BACKEND_URL)
-API_ENDPOINT_CONSULTA_CURSO=api/curso/consultar-cursor
+REACT_APP_API_ENDPOINT_CONSULTA_CURSO=api/curso/consultar-cursor
 
 # Endpoint para obtener detalles del periodo
 # Si está en el mismo servidor, usa BACKEND_URL. Si está en otro, configura BACKEND_URL_PERIOD en el código
-API_ENDPOINT_PERIOD_DETAILS=dev/GetDetailsPeriod
+REACT_APP_API_ENDPOINT_PERIOD_DETAILS=dev/GetDetailsPeriod
 ```
 
 **Para producción**, actualiza las URLs según tu entorno:
 ```env
 BACKEND_URL=https://api-produccion.upc.edu.pe
-API_ENDPOINT_CONSULTA_CURSO=api/curso/consultar-cursor
-API_ENDPOINT_PERIOD_DETAILS=dev/GetDetailsPeriod
+REACT_APP_API_ENDPOINT_CONSULTA_CURSO=api/curso/consultar-cursor
+REACT_APP_API_ENDPOINT_PERIOD_DETAILS=dev/GetDetailsPeriod
 ```
 
 **Nota**: Si `GetDetailsPeriod` está en un servidor diferente (ej: `http://localhost:8080`), puedes crear una variable `BACKEND_URL_PERIOD` o ajustar `BACKEND_URL` según corresponda.

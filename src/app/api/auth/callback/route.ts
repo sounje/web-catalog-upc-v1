@@ -21,12 +21,12 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
 
-  const cognitoDomain = process.env.COGNITO_DOMAIN;
-  const clientId = process.env.COGNITO_CLIENT_ID;
-  const redirectUri = process.env.COGNITO_REDIRECT_URI;
-  const clientSecret = process.env.COGNITO_CLIENT_SECRET;
+  const cognitoDomain = process.env.REACT_APP_COGNITO_DOMAIN;
+  const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID;
+  const redirectUri = process.env.REACT_APP_COGNITO_REDIRECT_URI;
+  const clientSecret = process.env.REACT_APP_COGNITO_CLIENT_SECRET;
   const authRedirectUnauthorized =
-    process.env.AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
+    process.env.REACT_APP_AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
 
   if (!code) {
     return NextResponse.redirect(authRedirectUnauthorized);

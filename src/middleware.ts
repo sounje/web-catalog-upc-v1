@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const COOKIE_NAME = 'cognito_session';
 const AUTH_REDIRECT_UNAUTHORIZED =
-  process.env.AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
+  process.env.REACT_APP_AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
