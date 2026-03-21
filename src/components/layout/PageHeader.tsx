@@ -38,7 +38,7 @@ export function PageHeader(): JSX.Element {
 
         {/* Título centrado */}
         <h1 className="w-full md:w-1/3 lg:w-1/3 text-2xl md:text-3xl lg:text-4xl font-bold text-white text-center">
-          CATÁLOGO DE CURSOS UPC
+          CATÁLOGO DE CURSOS UPC1
         </h1>
 
         {/* Imagen derecha + Cerrar sesión */}
