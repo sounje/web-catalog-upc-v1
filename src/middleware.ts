@@ -1,16 +1,13 @@
 /**
- * Middleware de validación de sesión Cognito
- * El login ocurre en otro proyecto; este solo valida que exista sesión activa.
+ * Middleware - validación de sesión desactivada temporalmente
  * - Si hay ?code= en URL: redirige a /api/auth/callback para intercambiar por tokens
- * - Si no hay code ni cookie de sesión: redirige al proyecto de login
- * - Si hay cookie de sesión: permite el acceso
+ * - En consola imprime los datos de la cookie cognito_session (si existe)
+ * - Permite el acceso sin validar sesión
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 
 const COOKIE_NAME = 'cognito_session';
-const AUTH_REDIRECT_UNAUTHORIZED =
-  process.env.REACT_APP_AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -52,10 +49,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(callbackUrl);
   }
 
-  // Sin code: verificar cookie de sesión
+  // Imprimir datos de la cookie en consola (servidor - terminal donde corre next dev)
   const sessionCookie = request.cookies.get(COOKIE_NAME);
-  if (!sessionCookie?.value) {
-    return NextResponse.redirect(AUTH_REDIRECT_UNAUTHORIZED);
+  if (sessionCookie?.value) {
+    try {
+      const decoded = atob(sessionCookie.value);
+      const sessionData = JSON.parse(decoded);
+      console.log('[Middleware] Cookie cognito_session:', sessionData);
+    } catch {
+      console.log('[Middleware] Cookie cognito_session (raw):', sessionCookie.value);
+    }
+  } else {
+    console.log('[Middleware] No hay cookie cognito_session');
   }
 
   return NextResponse.next();
