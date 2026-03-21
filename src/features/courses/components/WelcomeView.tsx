@@ -82,7 +82,7 @@ export function WelcomeView(): JSX.Element {
       <div className="absolute bottom-0 left-0 w-full bg-black/70 p-6 md:p-10">
         
         <h2 className="text-lg md:text-2xl font-bold text-white mb-4">
-          CATALOGO DE CURSOS
+          CATALOGO DE CURSOS1
         </h2>
 
         <p className="text-sm md:text-base leading-relaxed text-white max-w-5xl">
