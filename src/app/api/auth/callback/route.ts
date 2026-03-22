@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
   if (clientSecret) {
     body.append('client_secret', clientSecret);
-  }
+  } 
 
   try {
     const response = await fetch(tokenUrl, {
