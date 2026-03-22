@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestBaseUrl } from '@/lib/utils';
 
 const COOKIE_NAME = 'cognito_session';
 const COOKIE_MAX_AGE = 60 * 60 * 24; // 24 horas
@@ -38,8 +39,12 @@ function buildResponsePage(
 }
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin, pathname } = new URL(request.url);
+  const { searchParams, pathname } = new URL(request.url);
   const code = searchParams.get('code');
+
+  const baseUrl = getRequestBaseUrl(request);
+  const parsedUrl = new URL(request.url);
+  const fullUrl = `${baseUrl}${parsedUrl.pathname}${parsedUrl.search}`;
 
   const incomingRequestHeaders: Record<string, string> = {};
   request.headers.forEach((value, key) => {
@@ -48,8 +53,8 @@ export async function GET(request: NextRequest) {
 
   const incomingRequestInfo = {
     method: request.method,
-    url: request.url,
-    origin,
+    url: fullUrl,
+    origin: baseUrl,
     pathname,
     searchParams: Object.fromEntries(searchParams.entries()),
     headers: incomingRequestHeaders,

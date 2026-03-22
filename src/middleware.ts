@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getRequestBaseUrl } from '@/lib/utils';
 
 const COOKIE_NAME = 'cognito_session';
 const AUTH_REDIRECT_UNAUTHORIZED =
@@ -37,7 +38,8 @@ export function middleware(request: NextRequest) {
   // Si hay code en la URL: redirigir al callback para intercambiar por tokens
   const code = searchParams.get('code');
   if (code) {
-    const callbackUrl = new URL('/api/auth/callback', request.url);
+    const baseUrl = getRequestBaseUrl(request);
+    const callbackUrl = new URL('/api/auth/callback', baseUrl);
     callbackUrl.searchParams.set('code', code);
     const state = searchParams.get('state');
     if (state) {
