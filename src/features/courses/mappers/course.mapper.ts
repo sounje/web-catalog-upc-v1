@@ -61,24 +61,22 @@ function mapTeachingLevelsToApi(teachingLevels: string[]): string {
 /**
  * Mapea la respuesta de la API al formato interno
  * Actualizado según nueva estructura del backend
- * Soporta respuestas en camelCase y PascalCase
  */
-export function mapApiResponseToCourse(apiCourse: ApiCourseResponse): Course {
-  const raw = apiCourse as ApiCourseResponse & Record<string, unknown>;
-  const tipo = raw.tipo ?? raw.Tipo;
-  const faculty = raw.faculty ?? raw.Faculty;
+export function mapApiResponseToCourse(apiCourse: ApiCourseResponse & Record<string, unknown>): Course {
+  const tipo = apiCourse.tipo ?? apiCourse.Tipo;
+  const faculty = apiCourse.faculty ?? apiCourse.Faculty;
   return {
-    id: String(raw.id ?? raw.Id ?? ''),
-    code: String(raw.code ?? raw.Code ?? ''),
-    name: String(raw.course ?? raw.Course ?? ''),
-    program: String(raw.career ?? raw.Career ?? ''),
-    credits: Number(raw.credits ?? raw.Credits ?? 0),
+    id: String(apiCourse.id ?? apiCourse.Id ?? ''),
+    code: String(apiCourse.code ?? apiCourse.Code ?? ''),
+    name: String(apiCourse.course ?? apiCourse.Course ?? ''),
+    program: String(apiCourse.career ?? apiCourse.Career ?? ''),
+    credits: Number(apiCourse.credits ?? apiCourse.Credits ?? 0),
     faculty: String(faculty ?? ''),
-    direction: String(raw.direction ?? raw.Direction ?? ''),
-    description: String(raw.incoming ?? raw.Incoming ?? ''),
-    achievement: String(raw.graduate ?? raw.Graduate ?? ''),
-    prerequisites: String(raw.requirement ?? raw.Requirement ?? ''),
-    nivel: String(raw.nivel ?? raw.Nivel ?? ''),
+    direction: String(apiCourse.direction ?? apiCourse.Direction ?? ''),
+    description: String(apiCourse.incoming ?? apiCourse.Incoming ?? ''),
+    achievement: String(apiCourse.graduate ?? apiCourse.Graduate ?? ''),
+    prerequisites: String(apiCourse.requirement ?? apiCourse.Requirement ?? ''),
+    nivel: String(apiCourse.nivel ?? apiCourse.Nivel ?? ''),
     courseType: mapCourseTypeFromApi(tipo),
     teachingLevel: mapTeachingLevelFromApi(faculty),
   };
