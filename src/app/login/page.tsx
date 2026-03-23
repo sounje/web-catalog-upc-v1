@@ -1,25 +1,39 @@
 'use client';
 
 import { useAuth } from 'react-oidc-context';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function LoginPage() {
   const auth = useAuth();
   const router = useRouter();
+  const [checkingSession, setCheckingSession] = useState(true);
 
+  // Redirigir si ya está autenticado (library o cookie)
   useEffect(() => {
     if (auth.isAuthenticated) {
       router.push('/');
+      setCheckingSession(false);
+      return;
     }
+    // Verificar sesión en cookie (usuario ya logueado, recarga o nueva pestaña)
+    fetch('/api/auth/me')
+      .then((res) => (res.ok ? res.json() : { authenticated: false }))
+      .then((data) => {
+        if (data?.authenticated) {
+          router.push('/');
+        }
+      })
+      .catch(() => {})
+      .finally(() => setCheckingSession(false));
   }, [auth.isAuthenticated, router]);
 
   const handleSignIn = () => {
     auth.signinRedirect();
   };
 
-  if (auth.isLoading) {
+  if (auth.isLoading || checkingSession) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
         <div className="text-gray-600">Cargando...</div>

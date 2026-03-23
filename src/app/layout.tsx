@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import { AuthProvider, AuthSync } from "@/components/auth";
+import { AuthProvider, AuthSync, AuthLoadingGate } from "@/components/auth";
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={`${roboto.variable} font-sans antialiased`}>
         <AuthProvider>
           <AuthSync />
-          {children}
+          <AuthLoadingGate>{children}</AuthLoadingGate>
         </AuthProvider>
       </body>
     </html>

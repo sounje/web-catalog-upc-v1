@@ -3,11 +3,12 @@
 /**
  * Componente PageHeader
  * Banner con título del catálogo de cursos UPC y botón Cerrar sesión
- * Obtiene el usuario desde la sesión (cookie) vía /api/auth/me
+ * Usa useAuth (react-oidc-context) y fallback a /api/auth/me (cookie)
  */
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useAuth } from "react-oidc-context";
 import { JSX } from "react";
 
 interface AuthUser {
@@ -16,18 +17,27 @@ interface AuthUser {
 }
 
 export function PageHeader(): JSX.Element {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const auth = useAuth();
+  const [cookieUser, setCookieUser] = useState<AuthUser | null>(null);
 
+  // Fallback: sesión en cookie (cuando auth.user no está, ej: recarga)
   useEffect(() => {
+    if (auth.isAuthenticated) return;
     fetch('/api/auth/me')
       .then((res) => (res.ok ? res.json() : { authenticated: false }))
-      .then(setUser)
-      .catch(() => setUser({ authenticated: false }));
-  }, []);
+      .then(setCookieUser)
+      .catch(() => setCookieUser({ authenticated: false }));
+  }, [auth.isAuthenticated]);
 
   const handleSignOut = () => {
     window.location.href = '/api/auth/logout';
   };
+
+  const email =
+    auth.user?.profile?.email ??
+    (auth.isAuthenticated && auth.user?.profile?.name ? String(auth.user.profile.name) : null) ??
+    cookieUser?.email;
+  const isAuthenticated = auth.isAuthenticated || (cookieUser?.authenticated ?? false);
 
   return (
     <div className="w-full bg-red-700 py-2">
@@ -51,11 +61,13 @@ export function PageHeader(): JSX.Element {
               className="object-contain"
             />
           </div>
-          {user?.authenticated && user?.email && (
+          {isAuthenticated && (
             <div className="flex items-center gap-2">
-              <span className="text-white/90 text-sm truncate max-w-[120px]">
-                {user.email}
-              </span>
+              {email && (
+                <span className="text-white/90 text-sm truncate max-w-[120px]">
+                  {email}
+                </span>
+              )}
               <button
                 type="button"
                 onClick={handleSignOut}
