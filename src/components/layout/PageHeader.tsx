@@ -2,42 +2,30 @@
 
 /**
  * Componente PageHeader
- * Banner con título del catálogo de cursos UPC y botón Cerrar sesión
- * Usa useAuth (react-oidc-context) y fallback a /api/auth/me (cookie)
+ * Valida sesión con auth.isAuthenticated (igual que proyectoLoginTest)
  */
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { JSX } from "react";
 
-interface AuthUser {
-  authenticated: boolean;
-  email?: string;
-}
-
 export function PageHeader(): JSX.Element {
   const auth = useAuth();
-  const [cookieUser, setCookieUser] = useState<AuthUser | null>(null);
-
-  // Fallback: sesión en cookie (cuando auth.user no está, ej: recarga)
-  useEffect(() => {
-    if (auth.isAuthenticated) return;
-    fetch('/api/auth/me')
-      .then((res) => (res.ok ? res.json() : { authenticated: false }))
-      .then(setCookieUser)
-      .catch(() => setCookieUser({ authenticated: false }));
-  }, [auth.isAuthenticated]);
 
   const handleSignOut = () => {
-    window.location.href = '/api/auth/logout';
+    const cognitoDomain =
+      process.env.NEXT_PUBLIC_COGNITO_DOMAIN || process.env.REACT_APP_COGNITO_DOMAIN;
+    const clientId =
+      process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID || process.env.REACT_APP_COGNITO_CLIENT_ID;
+    if (cognitoDomain && clientId) {
+      const logoutUri = typeof window !== 'undefined' ? `${window.location.origin}/login` : '/login';
+      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    } else {
+      auth.removeUser();
+    }
   };
 
-  const email =
-    auth.user?.profile?.email ??
-    (auth.isAuthenticated && auth.user?.profile?.name ? String(auth.user.profile.name) : null) ??
-    cookieUser?.email;
-  const isAuthenticated = auth.isAuthenticated || (cookieUser?.authenticated ?? false);
+  const email = auth.user?.profile?.email ?? auth.user?.profile?.name;
 
   return (
     <div className="w-full bg-red-700 py-2">
@@ -61,11 +49,11 @@ export function PageHeader(): JSX.Element {
               className="object-contain"
             />
           </div>
-          {isAuthenticated && (
+          {auth.isAuthenticated && (
             <div className="flex items-center gap-2">
               {email && (
                 <span className="text-white/90 text-sm truncate max-w-[120px]">
-                  {email}
+                  {String(email)}
                 </span>
               )}
               <button

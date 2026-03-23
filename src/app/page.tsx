@@ -2,14 +2,14 @@
 
 /**
  * Página principal del catálogo de cursos UPC
- * Integra todos los componentes siguiendo Clean Architecture
- * Protegida por middleware (validación de sesión Cognito server-side)
+ * Protegida con auth.isAuthenticated (igual que proyectoLoginTest)
  */
 
 import { CourseProvider, useCourseContext } from '@/context/CourseContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Footer } from '@/components/layout/Footer';
 import { CourseFilters, CourseTable, WelcomeView, CourseModal } from '@/features/courses/components';
+import { CatalogGuard } from '@/components/auth';
 import { JSX } from 'react';
 
 /**
@@ -48,13 +48,14 @@ function CatalogContent(): JSX.Element {
 }
 
 /**
- * Componente principal exportado con el Provider
- * Middleware valida sesión; sin sesión redirige al proyecto de login
+ * Componente principal - CatalogGuard valida sesión con auth.isAuthenticated
  */
 export default function Home(): JSX.Element {
   return (
-    <CourseProvider>
-      <CatalogContent />
-    </CourseProvider>
+    <CatalogGuard>
+      <CourseProvider>
+        <CatalogContent />
+      </CourseProvider>
+    </CatalogGuard>
   );
 }
