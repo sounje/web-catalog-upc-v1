@@ -9,7 +9,7 @@ const COOKIE_NAME = 'cognito_session';
 
 export async function GET() {
   const authRedirectUnauthorized =
-    process.env.REACT_APP_AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
+    process.env.AUTH_REDIRECT_UNAUTHORIZED || 'http://localhost:3001/';
 
   const response = NextResponse.redirect(authRedirectUnauthorized, 302);
   response.cookies.set(COOKIE_NAME, '', {

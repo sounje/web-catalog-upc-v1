@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiPeriodDetailsResponse } from '@/features/courses/types';
 
-// REACT_APP_API_ENDPOINT_PERIOD_DETAILS ahora contiene la URL completa del endpoint
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT_PERIOD_DETAILS || 'http://localhost:8080/dev/GetDetailsPeriod';
+// API_ENDPOINT_PERIOD_DETAILS ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_PERIOD_DETAILS || 'http://localhost:8080/dev/GetDetailsPeriod';
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({

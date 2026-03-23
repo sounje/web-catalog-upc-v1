@@ -8,8 +8,8 @@ import https from 'https';
 import http from 'http';
 import type { ApiCourseResponse } from '@/features/courses/types';
 
-// REACT_APP_API_ENDPOINT_CONSULTA_CURSO ahora contiene la URL completa del endpoint
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT_CONSULTA_CURSO || 'http://localhost:5216/test/CursosSearch/GetCursosBySearch';
+// API_ENDPOINT_CONSULTA_CURSO ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_CONSULTA_CURSO || 'http://localhost:5216/test/CursosSearch/GetCursosBySearch';
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
@@ -83,8 +83,8 @@ export async function POST(request: NextRequest) {
       Tipo: body.tipo ?? '',
     };
 
-    // Log del endpoint completo cuando se consume REACT_APP_API_ENDPOINT_CONSULTA_CURSO
-    console.log('--- REACT_APP_API_ENDPOINT_CONSULTA_CURSO - Request ---');
+    // Log del endpoint completo cuando se consume API_ENDPOINT_CONSULTA_CURSO
+    console.log('--- API_ENDPOINT_CONSULTA_CURSO - Request ---');
     console.log('URL completa:', API_ENDPOINT);
     console.log('Method: GET');
     console.log('Body:', JSON.stringify(apiBody, null, 2));

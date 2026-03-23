@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiFacultyResponse } from '@/features/courses/types';
 
-// REACT_APP_API_ENDPOINT_CBO_FACULTADES ahora contiene la URL completa del endpoint
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT_CBO_FACULTADES || 'http://localhost:5216/api/Filter/GetFaculties';
+// API_ENDPOINT_CBO_FACULTADES ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_CBO_FACULTADES || 'http://localhost:5216/api/Filter/GetFaculties';
 
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
@@ -36,7 +36,7 @@ export async function GET() {
     const rawData = await response.json();
 
     // Log del response para debugging
-    console.log('REACT_APP_API_ENDPOINT_CBO_FACULTADES - Response:', JSON.stringify(rawData, null, 2));
+    console.log('API_ENDPOINT_CBO_FACULTADES - Response:', JSON.stringify(rawData, null, 2));
 
     // La API puede retornar null en caso de error
     if (rawData === null) {

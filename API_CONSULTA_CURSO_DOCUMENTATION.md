@@ -5,7 +5,7 @@
 POST {BACKEND_URL}/test/CursosSearch/GetCursosBySearch
 ```
 
-**Variable de entorno:** `REACT_APP_API_ENDPOINT_CONSULTA_CURSO`  
+**Variable de entorno:** `API_ENDPOINT_CONSULTA_CURSO`  
 **Valor por defecto:** `test/CursosSearch/GetCursosBySearch`
 
 ---

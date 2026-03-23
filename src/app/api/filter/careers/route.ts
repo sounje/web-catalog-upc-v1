@@ -7,8 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import type { ApiCareerResponse } from '@/features/courses/types';
 
-// REACT_APP_API_ENDPOINT_CBO_CARRERA_POR_FACULTAD ahora contiene la URL completa del endpoint
-const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT_CBO_CARRERA_POR_FACULTAD || 'http://localhost:5216/Filter/GetCareers';
+// API_ENDPOINT_CBO_CARRERA_POR_FACULTAD ahora contiene la URL completa del endpoint
+const API_ENDPOINT = process.env.API_ENDPOINT_CBO_CARRERA_POR_FACULTAD || 'http://localhost:5216/Filter/GetCareers';
 // Agente HTTPS que ignora certificados auto-firmados (solo para desarrollo)
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false
@@ -32,8 +32,8 @@ export async function POST(request: NextRequest) {
     }
     const urlWithParam = `${API_ENDPOINT.replace(/\/$/, '')}/${facultyId}`;
 
-    // Log del request enviado a REACT_APP_API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
-    console.log('--- REACT_APP_API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
+    // Log del request enviado a API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
+    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
     console.log('URL:', urlWithParam);
     console.log('Method: GET');
     console.log('Param (path):', facultyId);
