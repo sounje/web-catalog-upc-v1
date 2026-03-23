@@ -12,10 +12,14 @@ const clientId =
 const redirectUri =
   process.env.NEXT_PUBLIC_COGNITO_REDIRECT_URI || process.env.REACT_APP_COGNITO_REDIRECT_URI;
 
+const postLogoutRedirectUri =
+  typeof window !== 'undefined' ? `${window.location.origin}/login` : '/login';
+
 export const authConfig = {
   authority: authority || '',
   client_id: clientId || '',
   redirect_uri: redirectUri || (typeof window !== 'undefined' ? window.location.origin + '/' : ''),
+  post_logout_redirect_uri: postLogoutRedirectUri,
   response_type: 'code' as const,
   scope: 'aws.cognito.signin.user.admin email openid profile',
   automaticSilentRenew: true,

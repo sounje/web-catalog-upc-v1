@@ -13,14 +13,17 @@ export function PageHeader(): JSX.Element {
   const auth = useAuth();
 
   const handleSignOut = () => {
-    const cognitoDomain =
-      process.env.NEXT_PUBLIC_COGNITO_DOMAIN || process.env.REACT_APP_COGNITO_DOMAIN;
-    const clientId =
-      process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID || process.env.REACT_APP_COGNITO_CLIENT_ID;
-    if (cognitoDomain && clientId) {
-      const logoutUri = typeof window !== 'undefined' ? `${window.location.origin}/login` : '/login';
-      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-    } else {
+    const logoutRedirect = typeof window !== 'undefined' ? `${window.location.origin}/login` : '/login';
+    try {
+      auth.signoutRedirect({
+        post_logout_redirect_uri: logoutRedirect,
+        id_token_hint: auth.user?.id_token,
+        extraQueryParams: {
+          client_id: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID || process.env.REACT_APP_COGNITO_CLIENT_ID || '',
+          logout_uri: logoutRedirect,
+        },
+      });
+    } catch {
       auth.removeUser();
     }
   };
