@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Search, RotateCcw, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import { useCourseContext } from '@/context/CourseContext';
 import type { CourseFilters, ApiFacultyResponse, ApiCareerResponse, TeachingLevel, CourseType } from '@/features/courses/types';
 import { Button, Input, Select, Checkbox } from '@/shared/components';
@@ -21,6 +22,7 @@ import { filterSchema, type FilterFormData } from '@/features/courses/validation
 import { getFaculties, getCareersByFaculty } from '@/features/courses/services';
 
 export function CourseFilters(): React.JSX.Element {
+  const auth = useAuth();
   const { updateFilters, performSearch, clearSearch, isLoading, error, clearError } = useCourseContext();
 
   // Estado local para opciones dinámicas de facultades y carreras
@@ -53,7 +55,7 @@ export function CourseFilters(): React.JSX.Element {
     const loadFaculties = async () => {
       setLoadingFaculties(true);
       try {
-        const faculties = await getFaculties();
+        const faculties = await getFaculties({ idToken: auth.user?.id_token });
         setFacultyOptions(faculties);
       } catch (error) {
         console.error('Error al cargar facultades:', error);
@@ -63,7 +65,7 @@ export function CourseFilters(): React.JSX.Element {
     };
 
     loadFaculties();
-  }, []);
+  }, [auth.user?.id_token]);
 
   /**
    * Carga las carreras cuando cambia la facultad seleccionada
@@ -78,7 +80,7 @@ export function CourseFilters(): React.JSX.Element {
 
       setLoadingCareers(true);
       try {
-        const careers = await getCareersByFaculty(watchedFaculty);
+        const careers = await getCareersByFaculty(watchedFaculty, { idToken: auth.user?.id_token });
         setCareerOptions(careers);
         // Limpiar el programa seleccionado al cambiar de facultad
         setValue('program', '');
@@ -91,7 +93,7 @@ export function CourseFilters(): React.JSX.Element {
     };
 
     loadCareers();
-  }, [watchedFaculty, setValue]);
+  }, [watchedFaculty, setValue, auth.user?.id_token]);
 
   /**
    * Handler para submit del formulario

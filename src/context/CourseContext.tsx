@@ -7,6 +7,7 @@
  */
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { useAuth } from 'react-oidc-context';
 import type { Course, CourseFilters, CourseModalState } from '@/features/courses/types';
 import { searchCourses } from '@/features/courses/services';
 
@@ -44,6 +45,7 @@ interface CourseProviderProps {
 }
 
 export function CourseProvider({ children }: CourseProviderProps): React.JSX.Element {
+  const auth = useAuth();
   const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
   const [filters, setFilters] = useState<CourseFilters>(INITIAL_FILTERS);
   const [modalState, setModalState] = useState<CourseModalState>({
@@ -82,8 +84,8 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
       // Usar los filtros proporcionados o los del estado
       const filtersToUse = searchFilters || filters;
       
-      // Llamar a la API
-      const results = await searchCourses(filtersToUse);
+      // Llamar a la API con id_token para autorización
+      const results = await searchCourses(filtersToUse, { idToken: auth.user?.id_token });
       setFilteredCourses(results);
       setIsSearchActive(true);
     } catch (err) {
@@ -96,7 +98,7 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
     } finally {
       setIsLoading(false);
     }
-  }, [filters]);
+  }, [filters, auth.user?.id_token]);
 
   /**
    * Abre el modal con la información del curso

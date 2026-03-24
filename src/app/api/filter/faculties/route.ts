@@ -15,16 +15,17 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false
 });
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization') ?? undefined;
     console.log('Solicitando facultades desde:', API_ENDPOINT);
     
-    // Realizar la petición al backend
+    const headers: Record<string, string> = { Accept: 'application/json' };
+    if (authHeader) headers.Authorization = authHeader;
+
     const response = await fetch(API_ENDPOINT, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
+      headers,
       // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });

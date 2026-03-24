@@ -31,6 +31,10 @@ export async function POST(request: NextRequest) {
       );
     }
     const urlWithParam = `${API_ENDPOINT.replace(/\/$/, '')}/${facultyId}`;
+    const authHeader = request.headers.get('authorization') ?? undefined;
+
+    const headers: Record<string, string> = { Accept: 'application/json' };
+    if (authHeader) headers.Authorization = authHeader;
 
     // Log del request enviado a API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
     console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
@@ -39,12 +43,9 @@ export async function POST(request: NextRequest) {
     console.log('Param (path):', facultyId);
     console.log('----------------------------------------');
 
-    // Realizar la petición al backend (id como path param)
     const response = await fetch(urlWithParam, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
+      headers,
       // @ts-expect-error - Node.js fetch acepta agent pero TypeScript no lo reconoce
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });

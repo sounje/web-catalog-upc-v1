@@ -1,17 +1,26 @@
 /**
  * Servicio para comunicación con la API de cursos
  * Solo maneja la comunicación HTTP, el mapeo está separado
+ * Inyecta id_token en headers cuando se proporciona (autorización)
  */
 
 import type { Course, CourseFilters, ApiFacultyResponse, ApiCareerResponse, ApiPeriodDetailsResponse } from '@/features/courses/types';
 import type { ApiCourseRequest } from '@/features/courses/types';
 import { mapFiltersToApi, mapApiResponseToCourses } from '@/features/courses/mappers';
-import { fa } from 'zod/locales';
+
+export interface ApiAuthOptions {
+  idToken?: string;
+}
+
+function authHeaders(idToken?: string): Record<string, string> {
+  if (!idToken) return {};
+  return { Authorization: `Bearer ${idToken}` };
+}
 
 /**
  * Realiza la búsqueda de cursos en la API
  */
-export async function searchCourses(filters: CourseFilters): Promise<Course[]> {
+export async function searchCourses(filters: CourseFilters, options?: ApiAuthOptions): Promise<Course[]> {
   try {
     // Mapear filtros al formato de la API
     const requestBody: ApiCourseRequest = mapFiltersToApi(filters);
@@ -21,6 +30,7 @@ export async function searchCourses(filters: CourseFilters): Promise<Course[]> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders(options?.idToken),
       },
       body: JSON.stringify(requestBody),
     });
@@ -47,12 +57,13 @@ export async function searchCourses(filters: CourseFilters): Promise<Course[]> {
 /**
  * Obtiene un curso específico por ID (para futuras funcionalidades)
  */
-export async function getCourseById(courseId: string): Promise<Course | null> {
+export async function getCourseById(courseId: string, options?: ApiAuthOptions): Promise<Course | null> {
   try {
     const response = await fetch(`/api/courses/${courseId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders(options?.idToken),
       },
     });
 
@@ -76,12 +87,13 @@ export async function getCourseById(courseId: string): Promise<Course | null> {
  * Obtiene el listado de todas las facultades disponibles
  * Usa el API Route local como intermediario
  */
-export async function getFaculties(): Promise<ApiFacultyResponse[]> {
+export async function getFaculties(options?: ApiAuthOptions): Promise<ApiFacultyResponse[]> {
   try {
     const response = await fetch('/api/filter/faculties', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        ...authHeaders(options?.idToken),
       },
     });
 
@@ -109,7 +121,7 @@ export async function getFaculties(): Promise<ApiFacultyResponse[]> {
  * Usa el API Route local como intermediario
  * @param facultyId - GUID de la facultad
  */
-export async function getCareersByFaculty(facultyId: string): Promise<ApiCareerResponse[]> {
+export async function getCareersByFaculty(facultyId: string, options?: ApiAuthOptions): Promise<ApiCareerResponse[]> {
   try {
     // Validar que se proporcione un ID
     if (!facultyId) {
@@ -121,6 +133,7 @@ export async function getCareersByFaculty(facultyId: string): Promise<ApiCareerR
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...authHeaders(options?.idToken),
       },
       body: JSON.stringify(facultyId),
     });
@@ -148,12 +161,13 @@ export async function getCareersByFaculty(facultyId: string): Promise<ApiCareerR
  * Obtiene los detalles del periodo actual
  * Usa el API Route local como intermediario
  */
-export async function getPeriodDetails(): Promise<ApiPeriodDetailsResponse | null> {
+export async function getPeriodDetails(options?: ApiAuthOptions): Promise<ApiPeriodDetailsResponse | null> {
   try {
     const response = await fetch('/api/period/details', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        ...authHeaders(options?.idToken),
       },
     });
 

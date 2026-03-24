@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Componente WelcomeView
  * Vista que se muestra antes de realizar una búsqueda
@@ -5,10 +7,12 @@
 
 import Image from 'next/image';
 import { JSX, useEffect, useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import { getPeriodDetails } from '@/features/courses/services';
 import type { ApiPeriodDetailsResponse } from '@/features/courses/types';
 
 export function WelcomeView(): JSX.Element {
+  const auth = useAuth();
   const [periodDetails, setPeriodDetails] = useState<ApiPeriodDetailsResponse | null>(null);
   const [isLoadingPeriod, setIsLoadingPeriod] = useState(true);
 
@@ -20,7 +24,7 @@ export function WelcomeView(): JSX.Element {
     const loadPeriodDetails = async () => {
       setIsLoadingPeriod(true);
       try {
-        const details = await getPeriodDetails();
+        const details = await getPeriodDetails({ idToken: auth.user?.id_token });
         setPeriodDetails(details);
       } catch (error) {
         console.error('Error al cargar detalles del periodo:', error);
@@ -30,7 +34,7 @@ export function WelcomeView(): JSX.Element {
     };
 
     loadPeriodDetails();
-  }, []);
+  }, [auth.user?.id_token]);
 
   //creamos una funcion que recibe el periodo numerico y devuelve el texto correspondiente
   function getTextSemestre(period:number): string {
