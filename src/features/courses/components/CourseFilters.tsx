@@ -57,8 +57,7 @@ export function CourseFilters(): React.JSX.Element {
       try {
         const faculties = await getFaculties({ idToken: auth.user?.id_token });
         setFacultyOptions(faculties);
-      } catch (error) {
-        console.error('Error al cargar facultades:', error);
+      } catch {
       } finally {
         setLoadingFaculties(false);
       }
@@ -84,8 +83,7 @@ export function CourseFilters(): React.JSX.Element {
         setCareerOptions(careers);
         // Limpiar el programa seleccionado al cambiar de facultad
         setValue('program', '');
-      } catch (error) {
-        console.error('Error al cargar carreras:', error);
+      } catch {
         setCareerOptions([]);
       } finally {
         setLoadingCareers(false);

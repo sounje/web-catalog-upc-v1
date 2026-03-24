@@ -87,13 +87,6 @@ export async function POST(request: NextRequest) {
       Tipo: body.tipo ?? '',
     };
 
-    // Log del endpoint completo cuando se consume API_ENDPOINT_CONSULTA_CURSO
-    console.log('--- API_ENDPOINT_CONSULTA_CURSO - Request ---');
-    console.log('URL completa:', API_ENDPOINT);
-    console.log('Method: GET');
-    console.log('Body:', JSON.stringify(apiBody, null, 2));
-    console.log('----------------------------------------');
-
     // GET con body en el request (fetch no lo permite; usamos https.request)
     const { statusCode, data } = await fetchGetWithBody(API_ENDPOINT, apiBody, authHeader);
 
@@ -109,8 +102,6 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error en búsqueda de cursos:', error);
-    
     return NextResponse.json(
       { 
         error: 'Error interno del servidor',

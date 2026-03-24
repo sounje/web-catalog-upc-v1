@@ -49,7 +49,6 @@ export async function searchCourses(filters: CourseFilters, options?: ApiAuthOpt
     return mapApiResponseToCourses(result.data);
 
   } catch (error) {
-    console.error('Error en searchCourses:', error);
     throw error;
   }
 }
@@ -78,7 +77,6 @@ export async function getCourseById(courseId: string, options?: ApiAuthOptions):
     return result.data;
 
   } catch (error) {
-    console.error('Error en getCourseById:', error);
     throw error;
   }
 }
@@ -104,14 +102,12 @@ export async function getFaculties(options?: ApiAuthOptions): Promise<ApiFaculty
     const result = await response.json();
 
     if (!result.success) {
-      console.error('Error en la respuesta:', result.error);
       return result.data || [];
     }
 
     return result.data || [];
 
-  } catch (error) {
-    console.error('Error en getFaculties:', error);
+  } catch {
     return [];
   }
 }
@@ -145,14 +141,12 @@ export async function getCareersByFaculty(facultyId: string, options?: ApiAuthOp
     const result = await response.json();
 
     if (!result.success) {
-      console.error('Error en la respuesta:', result.error);
       return result.data || [];
     }
 
     return result.data || [];
 
-  } catch (error) {
-    console.error('Error en getCareersByFaculty:', error);
+  } catch {
     return [];
   }
 }
@@ -178,14 +172,12 @@ export async function getPeriodDetails(options?: ApiAuthOptions): Promise<ApiPer
     const result = await response.json();
 
     if (!result.success) {
-      console.error('Error en la respuesta:', result.error);
       return null;
     }
 
     return result.data || null;
 
-  } catch (error) {
-    console.error('Error en getPeriodDetails:', error);
+  } catch {
     return null;
   }
 }

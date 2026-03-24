@@ -177,14 +177,10 @@ export function exportToCSV(courses: Course[], filename: string): void {
 
       // Generar el archivo Excel
       XLSX.writeFile(workbook, `${filename}.xlsx`);
-
-      console.log(`✅ Exportados ${courses.length} cursos a ${filename}.xlsx`);
-    } catch (error) {
-      console.error('Error al exportar a Excel:', error);
+    } catch {
       alert('Ocurrió un error al exportar el archivo. Por favor, intenta nuevamente.');
     }
-  }).catch((error) => {
-    console.error('Error al cargar la librería XLSX:', error);
+  }).catch(() => {
     alert('Error al cargar el módulo de exportación. Por favor, recarga la página.');
   });
 }

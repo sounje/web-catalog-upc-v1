@@ -26,8 +26,7 @@ export function WelcomeView(): JSX.Element {
       try {
         const details = await getPeriodDetails({ idToken: auth.user?.id_token });
         setPeriodDetails(details);
-      } catch (error) {
-        console.error('Error al cargar detalles del periodo:', error);
+      } catch {
       } finally {
         setIsLoadingPeriod(false);
       }

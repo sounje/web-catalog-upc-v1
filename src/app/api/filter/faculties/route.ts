@@ -18,8 +18,6 @@ const httpsAgent = new https.Agent({
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization') ?? undefined;
-    console.log('Solicitando facultades desde:', API_ENDPOINT);
-    
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
 
@@ -36,12 +34,7 @@ export async function GET(request: NextRequest) {
 
     const rawData = await response.json();
 
-    // Log del response para debugging
-    console.log('API_ENDPOINT_CBO_FACULTADES - Response:', JSON.stringify(rawData, null, 2));
-
-    // La API puede retornar null en caso de error
     if (rawData === null) {
-      console.error('La API retornó null');
       return NextResponse.json({
         success: true,
         data: [],
@@ -56,9 +49,6 @@ export async function GET(request: NextRequest) {
       name: item.name ?? item.Name ?? '',
     }));
 
-    console.log(`Facultades obtenidas: ${data.length}`);
-
-    // Retornar los datos al cliente
     return NextResponse.json({
       success: true,
       data,
@@ -66,8 +56,6 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error al obtener facultades:', error);
-    
     return NextResponse.json(
       { 
         success: false,

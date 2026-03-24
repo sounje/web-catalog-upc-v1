@@ -33,7 +33,6 @@ export async function GET(request: NextRequest) {
   }
 
   if (!cognitoDomain || !clientId || !redirectUri) {
-    console.error('[Auth Callback] Configuración Cognito incompleta');
     return NextResponse.redirect(authRedirectUnauthorized);
   }
 
@@ -60,8 +59,6 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('[Auth Callback] Error Cognito token exchange:', response.status, errorData);
       return NextResponse.redirect(authRedirectUnauthorized);
     }
 
@@ -88,8 +85,7 @@ export async function GET(request: NextRequest) {
     });
 
     return redirectResponse;
-  } catch (error) {
-    console.error('[Auth Callback] Error en intercambio de tokens:', error);
+  } catch {
     return NextResponse.redirect(authRedirectUnauthorized);
   }
 }

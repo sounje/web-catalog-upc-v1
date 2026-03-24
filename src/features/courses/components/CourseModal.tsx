@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useCourseContext } from '@/context/CourseContext';
 import { Button } from '@/shared/components';
-import { getTeachingLevelLabel, getCourseTypeLabel, getNivelEnsenanzaLabel } from '@/features/courses/utils';
+import { getCourseTypeLabel, getNivelEnsenanzaLabel } from '@/features/courses/utils';
 
 export function CourseModal(): JSX.Element {
   const { modalState, closeModal } = useCourseContext();

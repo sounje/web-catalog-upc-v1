@@ -89,7 +89,6 @@ export function CourseProvider({ children }: CourseProviderProps): React.JSX.Ele
       setFilteredCourses(results);
       setIsSearchActive(true);
     } catch (err) {
-      console.error('Error en performSearch:', err);
       setError(err instanceof Error ? err.message : 'Error al buscar cursos. Por favor, intenta nuevamente.');
       
       // Limpiar resultados en caso de error

@@ -18,8 +18,6 @@ const httpsAgent = new https.Agent({
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization') ?? undefined;
-    console.log('Solicitando detalles del periodo desde:', API_ENDPOINT);
-    
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
 
@@ -38,7 +36,6 @@ export async function GET(request: NextRequest) {
 
     // La API puede retornar null en caso de error
     if (data === null) {
-      console.error('La API retornó null');
       return NextResponse.json(
         { 
           success: false,
@@ -49,17 +46,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log(`Detalles del periodo obtenidos: Semestre ${data.Semestre}, Año ${data.Fecha}`);
-
-    // Retornar los datos al cliente
     return NextResponse.json({
       success: true,
       data,
     });
 
   } catch (error) {
-    console.error('Error al obtener detalles del periodo:', error);
-    
     return NextResponse.json(
       { 
         success: false,

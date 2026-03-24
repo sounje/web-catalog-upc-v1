@@ -36,13 +36,6 @@ export async function POST(request: NextRequest) {
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
 
-    // Log del request enviado a API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
-    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
-    console.log('URL:', urlWithParam);
-    console.log('Method: GET');
-    console.log('Param (path):', facultyId);
-    console.log('----------------------------------------');
-
     const response = await fetch(urlWithParam, {
       method: 'GET',
       headers,
@@ -58,7 +51,6 @@ export async function POST(request: NextRequest) {
 
     // La API puede retornar null en caso de error
     if (rawData === null) {
-      console.error('La API retornó null');
       return NextResponse.json({
         success: true,
         data: [],
@@ -73,9 +65,7 @@ export async function POST(request: NextRequest) {
       name: item.name ?? item.Name ?? '',
     }));
 
-    console.log(`Carreras obtenidas: ${data.length}`);
 
-    // Retornar los datos al cliente
     return NextResponse.json({
       success: true,
       data,
@@ -83,8 +73,6 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error al obtener carreras:', error);
-    
     return NextResponse.json(
       { 
         success: false,
