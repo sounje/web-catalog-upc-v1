@@ -88,13 +88,14 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Error desconocido';
+    const backendBody = error instanceof Error ? { name: error.name, message: error.message } : String(error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Error al obtener facultades',
+        error: 'Error en API externa (capa 2)',
         message: msg,
         backendStatus: 500,
-        backendBody: null,
+        backendBody,
         data: [],
       },
       { status: 500 }

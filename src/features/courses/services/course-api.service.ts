@@ -17,21 +17,25 @@ function authHeaders(idToken?: string): Record<string, string> {
   return { Authorization: `Bearer ${idToken}` };
 }
 
-/** Parsea error de la capa 1 cuando la capa 2 falla; permite ver el error en producción */
+/** Parsea error de la capa 1 cuando la capa 2 falla; muestra el detalle en producción */
 async function parseApiError(response: Response, context: string): Promise<never> {
+  const rawText = await response.text();
   let errData: { message?: string; error?: string; backendStatus?: number; backendBody?: unknown } = {};
   try {
-    errData = await response.json();
+    errData = rawText ? JSON.parse(rawText) : {};
   } catch {
-    errData = { message: await response.text() || `HTTP ${response.status}` };
+    errData = { message: rawText || `HTTP ${response.status}` };
   }
-  const backendInfo =
-    errData.backendBody != null
-      ? ` | Capa 2 (API externa): status=${errData.backendStatus ?? response.status}, body=${JSON.stringify(errData.backendBody)}`
-      : ` | HTTP ${response.status}`;
-  throw new Error(
-    `${errData.message ?? errData.error ?? context}${backendInfo}`
-  );
+  const status = errData.backendStatus ?? response.status;
+  const bodyStr = errData.backendBody != null ? JSON.stringify(errData.backendBody) : rawText || '';
+  const fullMessage = [
+    errData.message ?? errData.error ?? context,
+    `[Capa 2] status=${status}`,
+    bodyStr ? `body=${bodyStr}` : '',
+  ]
+    .filter(Boolean)
+    .join(' | ');
+  throw new Error(fullMessage);
 }
 
 /**
@@ -119,14 +123,17 @@ export async function getFaculties(options?: ApiAuthOptions): Promise<ApiFaculty
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(result.message || result.error || `Capa 2: ${JSON.stringify(result.backendBody ?? result)}`);
+      throw new Error(
+        result.message ||
+          result.error ||
+          `[Capa 2] status=${result.backendStatus ?? '?'} | body=${JSON.stringify(result.backendBody ?? result)}`
+      );
     }
 
     return result.data || [];
-
   } catch (error) {
     console.error('Error en getFaculties:', error);
-    return [];
+    throw error;
   }
 }
 
@@ -159,14 +166,17 @@ export async function getCareersByFaculty(facultyId: string, options?: ApiAuthOp
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(result.message || result.error || `Capa 2: ${JSON.stringify(result.backendBody ?? result)}`);
+      throw new Error(
+        result.message ||
+          result.error ||
+          `[Capa 2] status=${result.backendStatus ?? '?'} | body=${JSON.stringify(result.backendBody ?? result)}`
+      );
     }
 
     return result.data || [];
-
   } catch (error) {
     console.error('Error en getCareersByFaculty:', error);
-    return [];
+    throw error;
   }
 }
 
@@ -191,13 +201,16 @@ export async function getPeriodDetails(options?: ApiAuthOptions): Promise<ApiPer
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(result.message || result.error || `Capa 2: ${JSON.stringify(result.backendBody ?? result)}`);
+      throw new Error(
+        result.message ||
+          result.error ||
+          `[Capa 2] status=${result.backendStatus ?? '?'} | body=${JSON.stringify(result.backendBody ?? result)}`
+      );
     }
 
     return result.data || null;
-
   } catch (error) {
     console.error('Error en getPeriodDetails:', error);
-    return null;
+    throw error;
   }
 }

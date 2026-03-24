@@ -150,9 +150,11 @@ export function CourseFilters(): React.JSX.Element {
       <hr className="mb-6 border-gray-200" />
 
       {apiLoadError && (
-        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
-          <p className="text-sm font-medium text-amber-800">Error de API (capa 2):</p>
-          <p className="text-xs text-amber-700 mt-1 break-all">{apiLoadError}</p>
+        <div className="mb-4 p-4 bg-red-50 border-2 border-red-300 rounded-md">
+          <p className="text-sm font-bold text-red-800">Error API (capa 2) – detalle visible en producción:</p>
+          <pre className="mt-2 text-xs text-red-700 whitespace-pre-wrap break-all overflow-x-auto max-h-40 overflow-y-auto">
+            {apiLoadError}
+          </pre>
         </div>
       )}
 
