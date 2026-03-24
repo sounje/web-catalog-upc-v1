@@ -32,15 +32,15 @@ export async function POST(request: NextRequest) {
     }
     const urlWithParam = `${API_ENDPOINT.replace(/\/$/, '')}/${facultyId}`;
     const authHeader = request.headers.get('authorization') ?? undefined;
-
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
 
-    // Log del request enviado a API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
-    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
-    console.log('URL:', urlWithParam);
+    // Log de API consumida
+    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD (GetCareers) ---');
+    console.log('API consumida:', urlWithParam);
     console.log('Method: GET');
-    console.log('Param (path):', facultyId);
+    console.log('Headers:', JSON.stringify(headers, null, 2));
+    console.log('Param (facultyId):', facultyId);
     console.log('----------------------------------------');
 
     const response = await fetch(urlWithParam, {

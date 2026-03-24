@@ -18,10 +18,15 @@ const httpsAgent = new https.Agent({
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization') ?? undefined;
-    console.log('Solicitando facultades desde:', API_ENDPOINT);
-    
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
+
+    // Log de API consumida
+    console.log('--- API_ENDPOINT_CBO_FACULTADES (GetAllFaculties) ---');
+    console.log('API consumida:', API_ENDPOINT);
+    console.log('Method: GET');
+    console.log('Headers:', JSON.stringify(headers, null, 2));
+    console.log('----------------------------------------');
 
     const response = await fetch(API_ENDPOINT, {
       method: 'GET',

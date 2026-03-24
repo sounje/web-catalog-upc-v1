@@ -87,11 +87,12 @@ export async function POST(request: NextRequest) {
       Tipo: body.tipo ?? '',
     };
 
-    // Log del endpoint completo cuando se consume API_ENDPOINT_CONSULTA_CURSO
-    console.log('--- API_ENDPOINT_CONSULTA_CURSO - Request ---');
-    console.log('URL completa:', API_ENDPOINT);
+    // Log de API consumida
+    console.log('--- API_ENDPOINT_CONSULTA_CURSO (GetCoursesBySearch) ---');
+    console.log('API consumida:', API_ENDPOINT);
     console.log('Method: GET');
-    console.log('Body:', JSON.stringify(apiBody, null, 2));
+    console.log('Headers:', JSON.stringify({ 'Content-Type': 'application/json', ...(authHeader && { Authorization: authHeader }) }, null, 2));
+    console.log('Body (valores):', JSON.stringify(apiBody, null, 2));
     console.log('----------------------------------------');
 
     // GET con body en el request (fetch no lo permite; usamos https.request)
