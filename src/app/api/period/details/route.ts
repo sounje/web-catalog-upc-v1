@@ -18,15 +18,10 @@ const httpsAgent = new https.Agent({
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization') ?? undefined;
+    console.log('Solicitando detalles del periodo desde:', API_ENDPOINT);
+    
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
-
-    // Log de API consumida
-    console.log('--- API_ENDPOINT_PERIOD_DETAILS (GetDetailsPeriod) ---');
-    console.log('API consumida:', API_ENDPOINT);
-    console.log('Method: GET');
-    console.log('Headers:', JSON.stringify(headers, null, 2));
-    console.log('----------------------------------------');
 
     const response = await fetch(API_ENDPOINT, {
       method: 'GET',
@@ -35,28 +30,11 @@ export async function GET(request: NextRequest) {
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
-    const rawBody = await response.text();
-    let backendBody: unknown;
-    try {
-      backendBody = rawBody ? JSON.parse(rawBody) : null;
-    } catch {
-      backendBody = rawBody;
-    }
-
     if (!response.ok) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Error en API externa (capa 2)',
-          message: `API externa respondió con status ${response.status}`,
-          backendStatus: response.status,
-          backendBody,
-        },
-        { status: response.status }
-      );
+      throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    const data: ApiPeriodDetailsResponse | null = backendBody as ApiPeriodDetailsResponse | null;
+    const data: ApiPeriodDetailsResponse | null = await response.json();
 
     // La API puede retornar null en caso de error
     if (data === null) {
@@ -80,16 +58,14 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Error desconocido';
-    const backendBody = error instanceof Error ? { name: error.name, message: error.message } : String(error);
+    console.error('Error al obtener detalles del periodo:', error);
+    
     return NextResponse.json(
-      {
+      { 
         success: false,
-        error: 'Error en API externa (capa 2)',
-        message: msg,
-        backendStatus: 500,
-        backendBody,
-        data: null,
+        error: 'Error al obtener detalles del periodo',
+        message: error instanceof Error ? error.message : 'Error desconocido',
+        data: null
       },
       { status: 500 }
     );

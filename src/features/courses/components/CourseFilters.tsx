@@ -25,11 +25,11 @@ export function CourseFilters(): React.JSX.Element {
   const auth = useAuth();
   const { updateFilters, performSearch, clearSearch, isLoading, error, clearError } = useCourseContext();
 
+  // Estado local para opciones dinámicas de facultades y carreras
   const [facultyOptions, setFacultyOptions] = useState<ApiFacultyResponse[]>([]);
   const [careerOptions, setCareerOptions] = useState<ApiCareerResponse[]>([]);
   const [loadingFaculties, setLoadingFaculties] = useState(false);
   const [loadingCareers, setLoadingCareers] = useState(false);
-  const [apiLoadError, setApiLoadError] = useState<string | null>(null);
 
   const { register, handleSubmit, watch, reset, setValue } = useForm<FilterFormData>({
     resolver: zodResolver(filterSchema),
@@ -54,12 +54,11 @@ export function CourseFilters(): React.JSX.Element {
   useEffect(() => {
     const loadFaculties = async () => {
       setLoadingFaculties(true);
-      setApiLoadError(null);
       try {
         const faculties = await getFaculties({ idToken: auth.user?.id_token });
         setFacultyOptions(faculties);
       } catch (error) {
-        setApiLoadError(error instanceof Error ? error.message : 'Error al cargar facultades');
+        console.error('Error al cargar facultades:', error);
       } finally {
         setLoadingFaculties(false);
       }
@@ -80,14 +79,14 @@ export function CourseFilters(): React.JSX.Element {
       }
 
       setLoadingCareers(true);
-      setApiLoadError(null);
       try {
         const careers = await getCareersByFaculty(watchedFaculty, { idToken: auth.user?.id_token });
         setCareerOptions(careers);
+        // Limpiar el programa seleccionado al cambiar de facultad
         setValue('program', '');
       } catch (error) {
+        console.error('Error al cargar carreras:', error);
         setCareerOptions([]);
-        setApiLoadError(error instanceof Error ? error.message : 'Error al cargar carreras');
       } finally {
         setLoadingCareers(false);
       }
@@ -148,15 +147,6 @@ export function CourseFilters(): React.JSX.Element {
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-900 mb-4">Filtros de Cursos</h2>
       <hr className="mb-6 border-gray-200" />
-
-      {apiLoadError && (
-        <div className="mb-4 p-4 bg-red-50 border-2 border-red-300 rounded-md">
-          <p className="text-sm font-bold text-red-800">Error API (capa 2) – detalle visible en producción:</p>
-          <pre className="mt-2 text-xs text-red-700 whitespace-pre-wrap break-all overflow-x-auto max-h-40 overflow-y-auto">
-            {apiLoadError}
-          </pre>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Buscar Cursos */}

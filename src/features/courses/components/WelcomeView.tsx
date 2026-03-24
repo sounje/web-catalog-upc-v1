@@ -15,7 +15,6 @@ export function WelcomeView(): JSX.Element {
   const auth = useAuth();
   const [periodDetails, setPeriodDetails] = useState<ApiPeriodDetailsResponse | null>(null);
   const [isLoadingPeriod, setIsLoadingPeriod] = useState(true);
-  const [periodError, setPeriodError] = useState<string | null>(null);
 
   /**
    * Carga los detalles del periodo al montar el componente
@@ -24,12 +23,11 @@ export function WelcomeView(): JSX.Element {
   useEffect(() => {
     const loadPeriodDetails = async () => {
       setIsLoadingPeriod(true);
-      setPeriodError(null);
       try {
         const details = await getPeriodDetails({ idToken: auth.user?.id_token });
         setPeriodDetails(details);
       } catch (error) {
-        setPeriodError(error instanceof Error ? error.message : 'Error al cargar periodo');
+        console.error('Error al cargar detalles del periodo:', error);
       } finally {
         setIsLoadingPeriod(false);
       }
@@ -61,12 +59,16 @@ export function WelcomeView(): JSX.Element {
    * Formatea el texto de información actualizada
    */
   const getUpdatedInfoText = (): string => {
-    if (isLoadingPeriod) return 'Información actualizada...';
-    if (periodError) return 'Ver error de API en el recuadro rojo superior.';
+    if (isLoadingPeriod) {
+      return 'Información actualizada...';
+    }
+    
     if (periodDetails) {
       const semestreText = getTextSemestre(periodDetails.Semestre);
       return `Información actualizada al ${semestreText} del ${periodDetails.Fecha}`;
     }
+    
+    // Fallback si no se puede cargar la información
     return 'Información actualizada';
   };
 
@@ -80,17 +82,9 @@ export function WelcomeView(): JSX.Element {
         className="object-cover object-center"
         priority
       />
-      {periodError && (
-        <div className="absolute top-4 left-4 right-4 z-10 p-4 bg-red-600/95 text-white rounded-md border-2 border-red-700">
-          <p className="text-sm font-bold">Error API (capa 2) – GetDetailsPeriod:</p>
-          <pre className="mt-2 text-xs whitespace-pre-wrap break-all overflow-x-auto max-h-32 overflow-y-auto">
-            {periodError}
-          </pre>
-        </div>
-      )}
-
       {/* Franja oscura que cubre solo la parte inferior */}
       <div className="absolute bottom-0 left-0 w-full bg-black/70 p-6 md:p-10">
+        
         <h2 className="text-lg md:text-2xl font-bold text-white mb-4">
           CATALOGO DE CURSOS
         </h2>

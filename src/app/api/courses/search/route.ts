@@ -29,7 +29,7 @@ function fetchGetWithBody(url: string, body: object, authHeader?: string): Promi
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Content-Length': String(Buffer.byteLength(requestBody)),
+      'Content-Length': Buffer.byteLength(requestBody),
     };
     if (authHeader) headers.Authorization = authHeader;
 
@@ -87,31 +87,21 @@ export async function POST(request: NextRequest) {
       Tipo: body.tipo ?? '',
     };
 
-    // Log de API consumida
-    console.log('--- API_ENDPOINT_CONSULTA_CURSO (GetCoursesBySearch) ---');
-    console.log('API consumida:', API_ENDPOINT);
+    // Log del endpoint completo cuando se consume API_ENDPOINT_CONSULTA_CURSO
+    console.log('--- API_ENDPOINT_CONSULTA_CURSO - Request ---');
+    console.log('URL completa:', API_ENDPOINT);
     console.log('Method: GET');
-    console.log('Headers:', JSON.stringify({ 'Content-Type': 'application/json', ...(authHeader && { Authorization: authHeader }) }, null, 2));
-    console.log('Body (valores):', JSON.stringify(apiBody, null, 2));
+    console.log('Body:', JSON.stringify(apiBody, null, 2));
     console.log('----------------------------------------');
 
     // GET con body en el request (fetch no lo permite; usamos https.request)
     const { statusCode, data } = await fetchGetWithBody(API_ENDPOINT, apiBody, authHeader);
 
     if (statusCode < 200 || statusCode >= 300) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Error en API externa (capa 2)',
-          message: `API externa respondió con status ${statusCode}`,
-          backendStatus: statusCode,
-          backendBody: data,
-          data: [],
-        },
-        { status: statusCode }
-      );
+      throw new Error(`Backend responded with status: ${statusCode}`);
     }
 
+    // Retornar los datos al cliente
     return NextResponse.json({
       success: true,
       data,
@@ -119,15 +109,12 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Error desconocido';
+    console.error('Error en búsqueda de cursos:', error);
+    
     return NextResponse.json(
-      {
-        success: false,
+      { 
         error: 'Error interno del servidor',
-        message: msg,
-        backendStatus: 500,
-        backendBody: null,
-        data: [],
+        message: error instanceof Error ? error.message : 'Error desconocido'
       },
       { status: 500 }
     );

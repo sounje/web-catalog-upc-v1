@@ -17,27 +17,6 @@ function authHeaders(idToken?: string): Record<string, string> {
   return { Authorization: `Bearer ${idToken}` };
 }
 
-/** Parsea error de la capa 1 cuando la capa 2 falla; muestra el detalle en producción */
-async function parseApiError(response: Response, context: string): Promise<never> {
-  const rawText = await response.text();
-  let errData: { message?: string; error?: string; backendStatus?: number; backendBody?: unknown } = {};
-  try {
-    errData = rawText ? JSON.parse(rawText) : {};
-  } catch {
-    errData = { message: rawText || `HTTP ${response.status}` };
-  }
-  const status = errData.backendStatus ?? response.status;
-  const bodyStr = errData.backendBody != null ? JSON.stringify(errData.backendBody) : rawText || '';
-  const fullMessage = [
-    errData.message ?? errData.error ?? context,
-    `[Capa 2] status=${status}`,
-    bodyStr ? `body=${bodyStr}` : '',
-  ]
-    .filter(Boolean)
-    .join(' | ');
-  throw new Error(fullMessage);
-}
-
 /**
  * Realiza la búsqueda de cursos en la API
  */
@@ -57,7 +36,7 @@ export async function searchCourses(filters: CourseFilters, options?: ApiAuthOpt
     });
 
     if (!response.ok) {
-      await parseApiError(response, 'Error en la búsqueda');
+      throw new Error(`Error en la búsqueda: ${response.status}`);
     }
 
     const result = await response.json();
@@ -89,8 +68,10 @@ export async function getCourseById(courseId: string, options?: ApiAuthOptions):
     });
 
     if (!response.ok) {
-      if (response.status === 404) return null;
-      await parseApiError(response, 'Error al obtener curso');
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`Error al obtener curso: ${response.status}`);
     }
 
     const result = await response.json();
@@ -117,23 +98,21 @@ export async function getFaculties(options?: ApiAuthOptions): Promise<ApiFaculty
     });
 
     if (!response.ok) {
-      await parseApiError(response, 'Error al obtener facultades');
+      throw new Error(`Error al obtener facultades: ${response.status}`);
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(
-        result.message ||
-          result.error ||
-          `[Capa 2] status=${result.backendStatus ?? '?'} | body=${JSON.stringify(result.backendBody ?? result)}`
-      );
+      console.error('Error en la respuesta:', result.error);
+      return result.data || [];
     }
 
     return result.data || [];
+
   } catch (error) {
     console.error('Error en getFaculties:', error);
-    throw error;
+    return [];
   }
 }
 
@@ -160,23 +139,21 @@ export async function getCareersByFaculty(facultyId: string, options?: ApiAuthOp
     });
 
     if (!response.ok) {
-      await parseApiError(response, 'Error al obtener carreras');
+      throw new Error(`Error al obtener carreras: ${response.status}`);
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(
-        result.message ||
-          result.error ||
-          `[Capa 2] status=${result.backendStatus ?? '?'} | body=${JSON.stringify(result.backendBody ?? result)}`
-      );
+      console.error('Error en la respuesta:', result.error);
+      return result.data || [];
     }
 
     return result.data || [];
+
   } catch (error) {
     console.error('Error en getCareersByFaculty:', error);
-    throw error;
+    return [];
   }
 }
 
@@ -195,22 +172,20 @@ export async function getPeriodDetails(options?: ApiAuthOptions): Promise<ApiPer
     });
 
     if (!response.ok) {
-      await parseApiError(response, 'Error al obtener detalles del periodo');
+      throw new Error(`Error al obtener detalles del periodo: ${response.status}`);
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      throw new Error(
-        result.message ||
-          result.error ||
-          `[Capa 2] status=${result.backendStatus ?? '?'} | body=${JSON.stringify(result.backendBody ?? result)}`
-      );
+      console.error('Error en la respuesta:', result.error);
+      return null;
     }
 
     return result.data || null;
+
   } catch (error) {
     console.error('Error en getPeriodDetails:', error);
-    throw error;
+    return null;
   }
 }

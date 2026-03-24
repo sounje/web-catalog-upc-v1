@@ -32,15 +32,15 @@ export async function POST(request: NextRequest) {
     }
     const urlWithParam = `${API_ENDPOINT.replace(/\/$/, '')}/${facultyId}`;
     const authHeader = request.headers.get('authorization') ?? undefined;
+
     const headers: Record<string, string> = { Accept: 'application/json' };
     if (authHeader) headers.Authorization = authHeader;
 
-    // Log de API consumida
-    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD (GetCareers) ---');
-    console.log('API consumida:', urlWithParam);
+    // Log del request enviado a API_ENDPOINT_CBO_CARRERA_POR_FACULTAD
+    console.log('--- API_ENDPOINT_CBO_CARRERA_POR_FACULTAD - Request ---');
+    console.log('URL:', urlWithParam);
     console.log('Method: GET');
-    console.log('Headers:', JSON.stringify(headers, null, 2));
-    console.log('Param (facultyId):', facultyId);
+    console.log('Param (path):', facultyId);
     console.log('----------------------------------------');
 
     const response = await fetch(urlWithParam, {
@@ -50,27 +50,11 @@ export async function POST(request: NextRequest) {
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
-    const rawBody = await response.text();
-    let rawData: unknown;
-    try {
-      rawData = rawBody ? JSON.parse(rawBody) : null;
-    } catch {
-      rawData = rawBody;
+    if (!response.ok) {
+      throw new Error(`Backend responded with status: ${response.status}`);
     }
 
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Error en API externa (capa 2)',
-          message: `API externa respondió con status ${response.status}`,
-          backendStatus: response.status,
-          backendBody: rawData,
-          data: [],
-        },
-        { status: response.status }
-      );
-    }
+    const rawData = await response.json();
 
     // La API puede retornar null en caso de error
     if (rawData === null) {
@@ -83,8 +67,8 @@ export async function POST(request: NextRequest) {
     }
 
     // La API AWS retorna Id/Name (PascalCase), normalizar a id/name (camelCase) para el frontend
-    const arr = Array.isArray(rawData) ? rawData : [];
-    const data: ApiCareerResponse[] = arr.map((item: { Id?: string; id?: string; Name?: string; name?: string }) => ({
+    const isArray = Array.isArray(rawData);
+    const data: ApiCareerResponse[] = (isArray ? rawData : []).map((item: { Id?: string; id?: string; Name?: string; name?: string }) => ({
       id: item.id ?? item.Id ?? '',
       name: item.name ?? item.Name ?? '',
     }));
@@ -99,16 +83,14 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Error desconocido';
-    const backendBody = error instanceof Error ? { name: error.name, message: error.message } : String(error);
+    console.error('Error al obtener carreras:', error);
+    
     return NextResponse.json(
-      {
+      { 
         success: false,
-        error: 'Error en API externa (capa 2)',
-        message: msg,
-        backendStatus: 500,
-        backendBody,
-        data: [],
+        error: 'Error al obtener carreras',
+        message: error instanceof Error ? error.message : 'Error desconocido',
+        data: []
       },
       { status: 500 }
     );
