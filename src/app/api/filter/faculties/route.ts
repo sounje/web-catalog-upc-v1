@@ -71,8 +71,8 @@ export async function GET(request: NextRequest) {
     }
 
     // La API AWS retorna Id/Name (PascalCase), normalizar a id/name (camelCase) para el frontend
-    const isArray = Array.isArray(rawData);
-    const data: ApiFacultyResponse[] = (isArray ? rawData : []).map((item: { Id?: string; id?: string; Name?: string; name?: string }) => ({
+    const arr = Array.isArray(rawData) ? rawData : [];
+    const data: ApiFacultyResponse[] = arr.map((item: { Id?: string; id?: string; Name?: string; name?: string }) => ({
       id: item.id ?? item.Id ?? '',
       name: item.name ?? item.Name ?? '',
     }));

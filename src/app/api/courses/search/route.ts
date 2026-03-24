@@ -29,7 +29,7 @@ function fetchGetWithBody(url: string, body: object, authHeader?: string): Promi
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(requestBody),
+      'Content-Length': String(Buffer.byteLength(requestBody)),
     };
     if (authHeader) headers.Authorization = authHeader;
 
