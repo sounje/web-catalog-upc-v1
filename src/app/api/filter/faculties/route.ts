@@ -35,11 +35,27 @@ export async function GET(request: NextRequest) {
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
-    if (!response.ok) {
-      throw new Error(`Backend responded with status: ${response.status}`);
+    const rawBody = await response.text();
+    let rawData: unknown;
+    try {
+      rawData = rawBody ? JSON.parse(rawBody) : null;
+    } catch {
+      rawData = rawBody;
     }
 
-    const rawData = await response.json();
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Error en API externa (capa 2)',
+          message: `API externa respondió con status ${response.status}`,
+          backendStatus: response.status,
+          backendBody: rawData,
+          data: [],
+        },
+        { status: response.status }
+      );
+    }
 
     // Log del response para debugging
     console.log('API_ENDPOINT_CBO_FACULTADES - Response:', JSON.stringify(rawData, null, 2));
@@ -71,14 +87,15 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error al obtener facultades:', error);
-    
+    const msg = error instanceof Error ? error.message : 'Error desconocido';
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Error al obtener facultades',
-        message: error instanceof Error ? error.message : 'Error desconocido',
-        data: []
+        message: msg,
+        backendStatus: 500,
+        backendBody: null,
+        data: [],
       },
       { status: 500 }
     );

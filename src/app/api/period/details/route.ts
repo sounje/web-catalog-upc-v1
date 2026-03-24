@@ -35,11 +35,28 @@ export async function GET(request: NextRequest) {
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
-    if (!response.ok) {
-      throw new Error(`Backend responded with status: ${response.status}`);
+    const rawBody = await response.text();
+    let backendBody: unknown;
+    try {
+      backendBody = rawBody ? JSON.parse(rawBody) : null;
+    } catch {
+      backendBody = rawBody;
     }
 
-    const data: ApiPeriodDetailsResponse | null = await response.json();
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Error en API externa (capa 2)',
+          message: `API externa respondió con status ${response.status}`,
+          backendStatus: response.status,
+          backendBody,
+        },
+        { status: response.status }
+      );
+    }
+
+    const data: ApiPeriodDetailsResponse | null = backendBody as ApiPeriodDetailsResponse | null;
 
     // La API puede retornar null en caso de error
     if (data === null) {
@@ -63,14 +80,15 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error al obtener detalles del periodo:', error);
-    
+    const msg = error instanceof Error ? error.message : 'Error desconocido';
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Error al obtener detalles del periodo',
-        message: error instanceof Error ? error.message : 'Error desconocido',
-        data: null
+        message: msg,
+        backendStatus: 500,
+        backendBody: null,
+        data: null,
       },
       { status: 500 }
     );

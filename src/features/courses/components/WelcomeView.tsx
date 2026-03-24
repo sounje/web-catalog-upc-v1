@@ -15,6 +15,7 @@ export function WelcomeView(): JSX.Element {
   const auth = useAuth();
   const [periodDetails, setPeriodDetails] = useState<ApiPeriodDetailsResponse | null>(null);
   const [isLoadingPeriod, setIsLoadingPeriod] = useState(true);
+  const [periodError, setPeriodError] = useState<string | null>(null);
 
   /**
    * Carga los detalles del periodo al montar el componente
@@ -23,11 +24,12 @@ export function WelcomeView(): JSX.Element {
   useEffect(() => {
     const loadPeriodDetails = async () => {
       setIsLoadingPeriod(true);
+      setPeriodError(null);
       try {
         const details = await getPeriodDetails({ idToken: auth.user?.id_token });
         setPeriodDetails(details);
       } catch (error) {
-        console.error('Error al cargar detalles del periodo:', error);
+        setPeriodError(error instanceof Error ? error.message : 'Error al cargar periodo');
       } finally {
         setIsLoadingPeriod(false);
       }
@@ -59,16 +61,12 @@ export function WelcomeView(): JSX.Element {
    * Formatea el texto de información actualizada
    */
   const getUpdatedInfoText = (): string => {
-    if (isLoadingPeriod) {
-      return 'Información actualizada...';
-    }
-    
+    if (isLoadingPeriod) return 'Información actualizada...';
+    if (periodError) return `Error: ${periodError}`;
     if (periodDetails) {
       const semestreText = getTextSemestre(periodDetails.Semestre);
       return `Información actualizada al ${semestreText} del ${periodDetails.Fecha}`;
     }
-    
-    // Fallback si no se puede cargar la información
     return 'Información actualizada';
   };
 

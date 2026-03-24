@@ -50,11 +50,27 @@ export async function POST(request: NextRequest) {
       agent: API_ENDPOINT.startsWith('https') ? httpsAgent : undefined,
     });
 
-    if (!response.ok) {
-      throw new Error(`Backend responded with status: ${response.status}`);
+    const rawBody = await response.text();
+    let rawData: unknown;
+    try {
+      rawData = rawBody ? JSON.parse(rawBody) : null;
+    } catch {
+      rawData = rawBody;
     }
 
-    const rawData = await response.json();
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Error en API externa (capa 2)',
+          message: `API externa respondió con status ${response.status}`,
+          backendStatus: response.status,
+          backendBody: rawData,
+          data: [],
+        },
+        { status: response.status }
+      );
+    }
 
     // La API puede retornar null en caso de error
     if (rawData === null) {
@@ -83,14 +99,15 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error al obtener carreras:', error);
-    
+    const msg = error instanceof Error ? error.message : 'Error desconocido';
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Error al obtener carreras',
-        message: error instanceof Error ? error.message : 'Error desconocido',
-        data: []
+        message: msg,
+        backendStatus: 500,
+        backendBody: null,
+        data: [],
       },
       { status: 500 }
     );

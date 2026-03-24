@@ -99,10 +99,19 @@ export async function POST(request: NextRequest) {
     const { statusCode, data } = await fetchGetWithBody(API_ENDPOINT, apiBody, authHeader);
 
     if (statusCode < 200 || statusCode >= 300) {
-      throw new Error(`Backend responded with status: ${statusCode}`);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Error en API externa (capa 2)',
+          message: `API externa respondió con status ${statusCode}`,
+          backendStatus: statusCode,
+          backendBody: data,
+          data: [],
+        },
+        { status: statusCode }
+      );
     }
 
-    // Retornar los datos al cliente
     return NextResponse.json({
       success: true,
       data,
@@ -110,12 +119,15 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error en búsqueda de cursos:', error);
-    
+    const msg = error instanceof Error ? error.message : 'Error desconocido';
     return NextResponse.json(
-      { 
+      {
+        success: false,
         error: 'Error interno del servidor',
-        message: error instanceof Error ? error.message : 'Error desconocido'
+        message: msg,
+        backendStatus: 500,
+        backendBody: null,
+        data: [],
       },
       { status: 500 }
     );

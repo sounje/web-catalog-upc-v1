@@ -17,6 +17,23 @@ function authHeaders(idToken?: string): Record<string, string> {
   return { Authorization: `Bearer ${idToken}` };
 }
 
+/** Parsea error de la capa 1 cuando la capa 2 falla; permite ver el error en producción */
+async function parseApiError(response: Response, context: string): Promise<never> {
+  let errData: { message?: string; error?: string; backendStatus?: number; backendBody?: unknown } = {};
+  try {
+    errData = await response.json();
+  } catch {
+    errData = { message: await response.text() || `HTTP ${response.status}` };
+  }
+  const backendInfo =
+    errData.backendBody != null
+      ? ` | Capa 2 (API externa): status=${errData.backendStatus ?? response.status}, body=${JSON.stringify(errData.backendBody)}`
+      : ` | HTTP ${response.status}`;
+  throw new Error(
+    `${errData.message ?? errData.error ?? context}${backendInfo}`
+  );
+}
+
 /**
  * Realiza la búsqueda de cursos en la API
  */
@@ -36,7 +53,7 @@ export async function searchCourses(filters: CourseFilters, options?: ApiAuthOpt
     });
 
     if (!response.ok) {
-      throw new Error(`Error en la búsqueda: ${response.status}`);
+      await parseApiError(response, 'Error en la búsqueda');
     }
 
     const result = await response.json();
@@ -68,10 +85,8 @@ export async function getCourseById(courseId: string, options?: ApiAuthOptions):
     });
 
     if (!response.ok) {
-      if (response.status === 404) {
-        return null;
-      }
-      throw new Error(`Error al obtener curso: ${response.status}`);
+      if (response.status === 404) return null;
+      await parseApiError(response, 'Error al obtener curso');
     }
 
     const result = await response.json();
@@ -98,14 +113,13 @@ export async function getFaculties(options?: ApiAuthOptions): Promise<ApiFaculty
     });
 
     if (!response.ok) {
-      throw new Error(`Error al obtener facultades: ${response.status}`);
+      await parseApiError(response, 'Error al obtener facultades');
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      console.error('Error en la respuesta:', result.error);
-      return result.data || [];
+      throw new Error(result.message || result.error || `Capa 2: ${JSON.stringify(result.backendBody ?? result)}`);
     }
 
     return result.data || [];
@@ -139,14 +153,13 @@ export async function getCareersByFaculty(facultyId: string, options?: ApiAuthOp
     });
 
     if (!response.ok) {
-      throw new Error(`Error al obtener carreras: ${response.status}`);
+      await parseApiError(response, 'Error al obtener carreras');
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      console.error('Error en la respuesta:', result.error);
-      return result.data || [];
+      throw new Error(result.message || result.error || `Capa 2: ${JSON.stringify(result.backendBody ?? result)}`);
     }
 
     return result.data || [];
@@ -172,14 +185,13 @@ export async function getPeriodDetails(options?: ApiAuthOptions): Promise<ApiPer
     });
 
     if (!response.ok) {
-      throw new Error(`Error al obtener detalles del periodo: ${response.status}`);
+      await parseApiError(response, 'Error al obtener detalles del periodo');
     }
 
     const result = await response.json();
 
     if (!result.success) {
-      console.error('Error en la respuesta:', result.error);
-      return null;
+      throw new Error(result.message || result.error || `Capa 2: ${JSON.stringify(result.backendBody ?? result)}`);
     }
 
     return result.data || null;
